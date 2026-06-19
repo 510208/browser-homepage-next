@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import Clock from "@/components/widgets/Clock.vue";
 import SearchBox from "@/components/widgets/SearchBox.vue";
-
-import BottomCenter from "./components/container/BottomCenter.vue";
-import Quote from "./components/widgets/Quote.vue";
+import Quote from "@/components/widgets/Quote.vue";
+import BottomCenter from "@/components/container/BottomCenter.vue";
 </script>
 
 <template>
