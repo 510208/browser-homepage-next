@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import Clock from "@/components/home/Clock.vue";
+import SearchBox from "@/components/home/SearchBox.vue";
+
 import BottomCenter from "./components/container/BottomCenter.vue";
 </script>
 
 <template>
-  <div id="sh-main" class="h-screen w-screen">
+  <div id="sh-main" class="h-screen w-screen bg-transparent">
     <BottomCenter>
       <Clock />
+      <SearchBox />
     </BottomCenter>
   </div>
 
