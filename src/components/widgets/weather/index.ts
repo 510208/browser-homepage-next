@@ -1,3 +1,5 @@
+import Weather from "./Weather.vue";
 import WeatherTrigger from "./WeatherTrigger.vue";
+import WeatherCard from "./WeatherCard.vue";
 
-export { WeatherTrigger };
+export { Weather, WeatherTrigger, WeatherCard };
