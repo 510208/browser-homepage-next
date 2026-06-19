@@ -21,16 +21,18 @@ import Bookmarks from "@/components/widgets/bookmarks/Bookmarks.vue";
 
     <RightTop>
       <Avatar />
+      <Bookmarks class="mt-30" />
     </RightTop>
-
-    <Bookmarks />
   </div>
 
-  <div id="sh-background" class="fixed top-0 left-0 -z-10 h-screen w-screen">
+  <div id="sh-background" class="pointer-events-none fixed top-0 left-0 -z-10 h-screen w-screen">
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-[#FFFFFF] to-[#555555] mix-blend-soft-light"
+    />
     <img
       src="@assets/bg-images/background.png"
       alt="Background"
-      class="h-full w-full object-cover opacity-70"
+      class="h-full w-full object-cover"
     />
   </div>
 </template>
