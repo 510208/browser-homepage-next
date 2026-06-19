@@ -1,5 +1,5 @@
 import { XMLParser } from "fast-xml-parser";
-import type { TownVillagePointResponse } from "@/types/weatherResponse";
+import type { TownVillagePointResponse, WeatherResponse } from "@/types/weatherResponse";
 import { CITY_NAME_TO_DATASET_ID } from "@/consts/weather/datasetToCity";
 
 const CWA_OPENAPI_ENDPOINT = "https://api.samhacker.xyz/cwa/v1/rest/datastore"; // 天氣API轉換端點URL
@@ -84,3 +84,39 @@ async function convertLocationToLocationName(
     throw new Error("Failed to map city name to dataset ID");
   }
 }
+
+async function fetchWeather(): Promise<WeatherResponse> {
+  // 取得使用者的經緯度
+  const { latitude, longitude } = await getLattitudeLongitude();
+
+  // 將經緯度轉換為行政區代碼
+  const { id: datasetId, response: locationResponse } = await convertLocationToLocationName(
+    latitude,
+    longitude,
+  );
+
+  // 抓取天氣API
+  const response = await fetch(
+    `${CWA_OPENAPI_ENDPOINT}/F-D0047-093?locationId=${datasetId}&format=JSON&LocationName=${locationResponse.townName}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch weather data: ${response.status} ${response.statusText}`);
+  }
+
+  const weatherData: WeatherResponse = (await response.json()) as WeatherResponse;
+
+  console.log(
+    `[fetchWeather] Fetched weather data for dataset ID: ${datasetId}, location: ${locationResponse.townName}, Response: `,
+    weatherData,
+  );
+  return weatherData;
+}
+
+export { fetchWeather, getLattitudeLongitude, convertLocationToLocationName };
