@@ -15,6 +15,11 @@
   --color-brown-800: #3b2011;
   --color-brown-900: #27150c;
   --color-brown-950: #180d07;
+
+  --text-title: 64px;
+  --text-subtitle: 32px;
+  --text-normal: 24px;
+  --text-small: 16px;
 }
 
 /* === END CONFIG === */
