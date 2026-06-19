@@ -21,9 +21,18 @@
   --text-subtitle: 32px;
   --text-normal: 24px;
   --text-small: 16px;
+
+  --font-cyly: "ChenYuluoyan 2.0 Thin", sans-serif;
 }
 
 /* === END CONFIG === */
+
+@font-face {
+  font-family: "ChenYuluoyan 2.0 Thin";
+  src: url("/fonts/ChenYuluoyan-2.0-Thin.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
 
 :root {
   background-color: var(--color-brown-950);
