@@ -10,7 +10,7 @@ import Bookmarks from "@/components/widgets/bookmarks/Bookmarks.vue";
 </script>
 
 <template>
-  <div id="sh-main" class="h-screen w-screen bg-transparent">
+  <div id="sh-main" class="fixed top-0 left-0 z-10 h-screen w-screen">
     <BottomCenter>
       <div class="flex flex-col items-center gap-1">
         <Clock />
@@ -26,7 +26,7 @@ import Bookmarks from "@/components/widgets/bookmarks/Bookmarks.vue";
     <Bookmarks />
   </div>
 
-  <div id="sh-background" class="fixed top-0 left-0 -z-1 h-screen w-screen">
+  <div id="sh-background">
     <img
       src="@assets/bg-images/background.png"
       alt="Background"

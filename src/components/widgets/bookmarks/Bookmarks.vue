@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { PlusIcon } from "@lucide/vue";
 import { VueDraggable } from "vue-draggable-plus";
-import { Button } from "@components/ui/button";
 import { TooltipProvider } from "@components/ui/tooltip";
 import BookmarkItem from "./BookmarkItem.vue";
 import BookmarkDialog from "./BookmarkDialog.vue";
@@ -19,9 +18,16 @@ const {
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-md p-4">
+  <div
+    class="fixed top-1/2 right-6 flex w-16 -translate-y-1/2 flex-col items-center gap-3 rounded-full border bg-background/60 p-3 shadow-lg backdrop-blur-md"
+  >
     <TooltipProvider>
-      <VueDraggable v-model="bookmarks" :animation="150" item-key="id" class="grid w-full gap-2">
+      <VueDraggable
+        v-model="bookmarks"
+        :animation="150"
+        item-key="id"
+        class="flex w-full flex-col items-center gap-3"
+      >
         <BookmarkItem
           v-for="bookmark in bookmarks"
           :key="bookmark.id"
@@ -32,15 +38,14 @@ const {
       </VueDraggable>
     </TooltipProvider>
 
-    <div v-if="bookmarks.length < 10" class="mt-2">
-      <Button
-        variant="outline"
-        class="flex h-12 w-full items-center justify-center gap-2 border-dashed"
+    <div v-if="bookmarks.length < 10" class="flex h-12 w-12 items-center justify-center">
+      <button
+        type="button"
+        class="flex h-11 w-11 items-center justify-center rounded-full border border-dashed border-muted-foreground/60 bg-transparent text-muted-foreground transition-all hover:scale-115 hover:border-foreground hover:text-foreground"
         @click="openAddDialog"
       >
         <PlusIcon class="h-5 w-5" />
-        <span>新增書籤 ({{ bookmarks.length }}/10)</span>
-      </Button>
+      </button>
     </div>
 
     <BookmarkDialog

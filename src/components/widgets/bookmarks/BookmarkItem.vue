@@ -28,14 +28,6 @@ const faviconUrl = computed(() => {
   }
 });
 
-const displayDomain = computed(() => {
-  try {
-    return new URL(props.bookmark.url).hostname;
-  } catch (e) {
-    return props.bookmark.url;
-  }
-});
-
 function handleDelete() {
   const confirmDelete = window.confirm("確定要刪除此書籤嗎？");
   if (confirmDelete) {
@@ -45,30 +37,27 @@ function handleDelete() {
 </script>
 
 <template>
-  <div class="cursor-grab active:cursor-grabbing">
+  <div class="flex w-full cursor-grab justify-center active:cursor-grabbing">
     <ContextMenu>
       <ContextMenuTrigger as-child>
-        <div>
+        <div class="flex h-12 w-12 items-center justify-center">
           <Tooltip>
             <TooltipTrigger as-child>
               <a
                 :href="props.bookmark.url"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex w-full items-center gap-3 rounded-lg border bg-card p-3 text-card-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+                class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border bg-background/80 shadow-sm transition-transform hover:scale-115 hover:bg-accent"
               >
                 <img
                   :src="faviconUrl"
                   alt="favicon"
-                  class="h-6 w-6 rounded-sm object-contain"
+                  class="h-7 w-7 rounded-sm object-contain"
                   loading="lazy"
                 />
-                <span class="truncate text-sm font-medium">
-                  {{ displayDomain }}
-                </span>
               </a>
             </TooltipTrigger>
-            <TooltipContent side="left">
+            <TooltipContent side="left" class="max-w-xs truncate">
               <p>{{ props.bookmark.url }}</p>
             </TooltipContent>
           </Tooltip>
