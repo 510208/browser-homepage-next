@@ -1,5 +1,5 @@
-import type QuoteResponse from "@/types/quoteResponse";
-import { Convert } from "@/types/quoteResponse";
+import type QuoteResponse from "@/types/quoteResponse.d";
+import { Convert } from "@/types/quoteResponse.d";
 
 async function fetchQuote() {
   try {
