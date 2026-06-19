@@ -7,6 +7,10 @@ import { Avatar } from "@/components/widgets/avatar";
 import BottomCenter from "@/components/container/BottomCenter.vue";
 import RightTop from "@/components/container/RightTop.vue";
 import Bookmarks from "@/components/widgets/bookmarks/Bookmarks.vue";
+
+import { fetchWeather } from "@/lib/weather/fetchWeather";
+
+fetchWeather();
 </script>
 
 <template>
