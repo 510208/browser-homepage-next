@@ -1,1 +1,25 @@
 @import "tailwindcss";
+
+/* Global Color Variables */
+/* You can just change this color but not change its name */
+@theme {
+  --color-brown-100: #f9f2ef;
+  --color-brown-200: #f2e5de;
+  --color-brown-300: #ebd6cb;
+  --color-brown-400: #e2c6b7;
+  --color-brown-500: #c99477;
+  --color-brown-600: #b56c44;
+  --color-brown-700: #69391f;
+  --color-brown-800: #3b2011;
+  --color-brown-900: #27150c;
+  --color-brown-950: #180d07;
+}
+
+:root {
+  background-color: var(--color-brown-950);
+}
+
+html,
+body {
+  overflow: hidden; /* 同時停用垂直與水平卷軸 */
+}
