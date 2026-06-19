@@ -22,6 +22,11 @@ onMounted(async () => {
   } catch (error) {
     console.error("Error fetching quote:", error);
   }
+
+  const quoteElement = document.getElementById("sh-quote-text");
+  if (quoteElement) {
+    quoteElement.addEventListener("click", refreshQuote);
+  }
 });
 
 // 點擊文本刷新
@@ -33,10 +38,5 @@ function refreshQuote() {
     .catch((error) => {
       console.error("Error fetching quote:", error);
     });
-}
-
-const quoteElement = document.getElementById("sh-quote-text");
-if (quoteElement) {
-  quoteElement.addEventListener("click", refreshQuote);
 }
 </script>

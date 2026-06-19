@@ -13,7 +13,7 @@ export default interface QuoteResponse {
   hitokoto:    string;
   type:        string;
   from:        string;
-  from_who:    null;
+  from_who:    string | null;
   creator:     string;
   creator_uid: number;
   reviewer:    number;
@@ -193,7 +193,7 @@ const typeMap: any = {
     { json: "hitokoto", js: "hitokoto", typ: "" },
     { json: "type", js: "type", typ: "" },
     { json: "from", js: "from", typ: "" },
-    { json: "from_who", js: "from_who", typ: null },
+    { json: "from_who", js: "from_who", typ: u(null, "") },
     { json: "creator", js: "creator", typ: "" },
     { json: "creator_uid", js: "creator_uid", typ: 0 },
     { json: "reviewer", js: "reviewer", typ: 0 },
