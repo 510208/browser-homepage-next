@@ -47,7 +47,7 @@ function handleDelete() {
                 :href="props.bookmark.url"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border bg-background/80 shadow-sm transition-transform hover:scale-115 hover:bg-accent"
+                class="flex size-[50px] items-center justify-center overflow-hidden transition-transform hover:scale-105"
               >
                 <img
                   :src="faviconUrl"

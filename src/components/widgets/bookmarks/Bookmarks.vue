@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PlusIcon } from "@lucide/vue";
+import { CirclePlus } from "@lucide/vue";
 import { VueDraggable } from "vue-draggable-plus";
 import { TooltipProvider } from "@components/ui/tooltip";
 import BookmarkItem from "./BookmarkItem.vue";
@@ -19,7 +19,7 @@ const {
 
 <template>
   <div
-    class="fixed top-1/2 right-6 flex w-16 -translate-y-1/2 flex-col items-center gap-3 rounded-full border bg-background/60 p-3 shadow-lg backdrop-blur-md"
+    class="fixed top-1/2 right-6 flex w-[50px] -translate-y-1/2 flex-col items-center gap-2.5 p-0"
   >
     <TooltipProvider>
       <VueDraggable
@@ -41,10 +41,10 @@ const {
     <div v-if="bookmarks.length < 10" class="flex h-12 w-12 items-center justify-center">
       <button
         type="button"
-        class="flex h-11 w-11 items-center justify-center rounded-full border border-dashed border-muted-foreground/60 bg-transparent text-muted-foreground transition-all hover:scale-115 hover:border-foreground hover:text-foreground"
+        class="flex h-11 w-11 items-center justify-center rounded-full border-muted-foreground/60 bg-transparent text-muted-foreground transition-all hover:scale-115 hover:border-foreground hover:text-foreground"
         @click="openAddDialog"
       >
-        <PlusIcon class="h-5 w-5" />
+        <CirclePlus class="h-5 w-5" />
       </button>
     </div>
 
