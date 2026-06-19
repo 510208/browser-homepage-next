@@ -1,5 +1,8 @@
 <template>
-  <Input placeholder="Search..." />
+  <Input
+    placeholder="Search..."
+    class="font-300 px-auto max-h-none w-full max-w-[300px] border-none py-2.5 text-white"
+  />
 </template>
 
 <script setup lang="ts">

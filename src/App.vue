@@ -3,12 +3,16 @@ import Clock from "@/components/home/Clock.vue";
 import SearchBox from "@/components/home/SearchBox.vue";
 
 import BottomCenter from "./components/container/BottomCenter.vue";
+import Quote from "./components/home/Quote.vue";
 </script>
 
 <template>
   <div id="sh-main" class="h-screen w-screen bg-transparent">
     <BottomCenter>
-      <Clock />
+      <div class="flex flex-col items-center gap-1">
+        <Clock />
+        <Quote />
+      </div>
       <SearchBox />
     </BottomCenter>
   </div>
