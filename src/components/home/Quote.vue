@@ -7,6 +7,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 110%; /* 35.2px */
+  cursor: pointer;
 }
 </style>
 
