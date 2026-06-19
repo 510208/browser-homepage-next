@@ -26,7 +26,7 @@ import Bookmarks from "@/components/widgets/bookmarks/Bookmarks.vue";
     <Bookmarks />
   </div>
 
-  <div id="sh-background">
+  <div id="sh-background" class="fixed top-0 left-0 -z-10 h-screen w-screen">
     <img
       src="@assets/bg-images/background.png"
       alt="Background"
