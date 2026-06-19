@@ -38,7 +38,7 @@
   background-color: var(--color-brown-700);
   font-family: "Inter", "Noto Sans TC", sans-serif;
   --radius: 0.625rem;
-  --background: var(--color-brown-950);
+  --background: var(--color-brown-800);
   --foreground: var(--color-brown-100);
   --card: var(--color-brown-800);
   --card-foreground: var(--color-brown-100);
@@ -49,11 +49,11 @@
   --secondary: var(--color-brown-200);
   --secondary-foreground: var(--color-brown-800);
   --muted: var(--color-brown-200);
-  --muted-foreground: var(--color-brown-600);
+  --muted-foreground: var(--color-brown-400);
   --accent: var(--color-brown-500);
   --accent-foreground: var(--color-brown-100);
   --destructive: var(--color-brown-500);
-  --border: var(--color-brown-500);
+  --border: var(--color-brown-700);
   --input: var(--color-brown-500);
   --ring: var(--color-brown-500);
   --chart-1: oklch(0.646 0.222 41.116);
