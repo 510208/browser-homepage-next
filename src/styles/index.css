@@ -35,7 +35,7 @@
 }
 
 :root {
-  background-color: var(--color-brown-950);
+  background-color: var(--color-brown-700);
   font-family: "Inter", "Noto Sans TC", sans-serif;
   --radius: 0.625rem;
   --background: var(--color-brown-950);
