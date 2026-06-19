@@ -38,7 +38,7 @@
   background-color: var(--color-brown-950);
   font-family: "Inter", "Noto Sans TC", sans-serif;
   --radius: 0.625rem;
-  --background: transparent;
+  --background: var(--color-brown-950);
   --foreground: var(--color-brown-100);
   --card: var(--color-brown-800);
   --card-foreground: var(--color-brown-100);

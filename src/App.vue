@@ -5,7 +5,8 @@ import { Quote } from "@/components/widgets/quote";
 import { Avatar } from "@/components/widgets/avatar";
 
 import BottomCenter from "@/components/container/BottomCenter.vue";
-import RightTop from "./components/container/RightTop.vue";
+import RightTop from "@/components/container/RightTop.vue";
+import Bookmarks from "@/components/widgets/bookmarks/Bookmarks.vue";
 </script>
 
 <template>
@@ -21,6 +22,8 @@ import RightTop from "./components/container/RightTop.vue";
     <RightTop>
       <Avatar />
     </RightTop>
+
+    <Bookmarks />
   </div>
 
   <div id="sh-background" class="fixed top-0 left-0 -z-1 h-screen w-screen">
