@@ -187,7 +187,7 @@ function r(name: string) {
 }
 
 const typeMap: any = {
-  "RootObject": o([
+  "QuoteResponse": o([
     { json: "id", js: "id", typ: 0 },
     { json: "uuid", js: "uuid", typ: "" },
     { json: "hitokoto", js: "hitokoto", typ: "" },
