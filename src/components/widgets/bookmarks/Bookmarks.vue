@@ -5,6 +5,8 @@ import { TooltipProvider } from "@components/ui/tooltip";
 import BookmarkItem from "./BookmarkItem.vue";
 import BookmarkDialog from "./BookmarkDialog.vue";
 import { useBookmarks } from "./useBookmarks";
+import { cnUtils as cn } from "@/lib";
+import type { Bookmark } from "./types";
 
 const {
   bookmarks,
@@ -15,12 +17,19 @@ const {
   handleDeleteBookmark,
   updateDialogOpen,
 } = useBookmarks();
+
+// 接受參數style
+const props = defineProps<{
+  style?: Record<string, string>;
+}>();
+
+const emit = defineEmits<{
+  (e: "update:bookmarks", bookmarks: Bookmark[]): void;
+}>();
 </script>
 
 <template>
-  <div
-    class="fixed top-1/2 right-6 flex w-[50px] -translate-y-1/2 flex-col items-center gap-2.5 p-0"
-  >
+  <div :class="cn('flex w-[50px] flex-col items-center gap-2.5 p-0', props.style)">
     <TooltipProvider>
       <VueDraggable
         v-model="bookmarks"

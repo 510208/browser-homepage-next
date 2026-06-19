@@ -45,7 +45,7 @@ function handleDelete() {
             <TooltipTrigger as-child>
               <a
                 :href="props.bookmark.url"
-                target="_blank"
+                target="_self"
                 rel="noopener noreferrer"
                 class="flex size-[50px] items-center justify-center overflow-hidden transition-transform hover:scale-105"
               >
