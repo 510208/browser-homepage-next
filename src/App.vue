@@ -1,7 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Clock from "@/components/home/Clock.vue";
+import BottomCenter from "./components/container/BottomCenter.vue";
+</script>
 
 <template>
-  <div id="sh-main" class="h-screen w-screen"></div>
+  <div id="sh-main" class="h-screen w-screen">
+    <BottomCenter>
+      <Clock />
+    </BottomCenter>
+  </div>
 
   <div id="sh-background" class="fixed top-0 left-0 -z-1 h-screen w-screen">
     <img
