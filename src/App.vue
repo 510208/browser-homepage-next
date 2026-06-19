@@ -2,6 +2,8 @@
 import { Clock } from "@/components/widgets/clock";
 import { SearchBox } from "@/components/widgets/search-box";
 import { Quote } from "@/components/widgets/quote";
+import { Avatar } from "@/components/widgets/avatar";
+
 import BottomCenter from "@/components/container/BottomCenter.vue";
 import RightTop from "./components/container/RightTop.vue";
 </script>
@@ -16,7 +18,9 @@ import RightTop from "./components/container/RightTop.vue";
       <SearchBox />
     </BottomCenter>
 
-    <RightTop></RightTop>
+    <RightTop>
+      <Avatar />
+    </RightTop>
   </div>
 
   <div id="sh-background" class="fixed top-0 left-0 -z-1 h-screen w-screen">
