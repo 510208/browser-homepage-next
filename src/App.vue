@@ -3,6 +3,7 @@ import Clock from "@/components/widgets/Clock.vue";
 import SearchBox from "@/components/widgets/SearchBox.vue";
 import Quote from "@/components/widgets/Quote.vue";
 import BottomCenter from "@/components/container/BottomCenter.vue";
+import RightTop from "./components/container/RightTop.vue";
 </script>
 
 <template>
@@ -14,6 +15,8 @@ import BottomCenter from "@/components/container/BottomCenter.vue";
       </div>
       <SearchBox />
     </BottomCenter>
+
+    <RightTop></RightTop>
   </div>
 
   <div id="sh-background" class="fixed top-0 left-0 -z-1 h-screen w-screen">
