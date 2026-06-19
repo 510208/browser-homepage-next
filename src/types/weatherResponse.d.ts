@@ -1,3 +1,4 @@
+// #region 鄉鎮市區資料結構
 interface TownVillagePointResponse {
   // <townVillageItem>
   // <ctyCode>B</ctyCode>
@@ -38,14 +39,15 @@ interface TownVillagePointResponse {
   villageName: string;
 }
 
-// ======
+// #endregion
 
+// #region 天氣資料結構
 export interface WeatherResponse {
   /** 是否成功 */
   success: string;
   /** 結果 */
   result: Result;
-  /** 資料筆數 */
+  /** 資料 */
   records: Records;
 }
 
@@ -127,4 +129,58 @@ interface ElementValueBase {
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 export type ElementValue = AtLeastOne<ElementValueBase>;
 
-export type { TownVillagePointResponse, WeatherResponse };
+// #endregion
+
+// #region 展平後的天氣資料結構
+export interface SimplifiedWeatherResponse {
+  /** 是否成功 */
+  success: string;
+  /** 資料集列表 */
+  records: SimplifiedRecord[];
+}
+
+interface SimplifiedRecord {
+  /** 資料集名稱 (原本的 DatasetDescription) */
+  datasetName: string;
+  /** 位置名稱 (原本的 LocationsName) */
+  locationsName: string;
+  /** 資料 ID (原本的 Dataid) */
+  dataId: string;
+  /** 各地點的天氣狀態列表 */
+  locations: SimplifiedLocation[];
+}
+
+/**
+ * 將時間對應到數值的 Map 結構
+ * 例如: { "2026-06-19 12:00:00": "32" }
+ */
+export type TimeValueMap = Record<string, string>;
+
+export interface SimplifiedLocation {
+  /** 地點名稱 (如：板橋區、西屯區) */
+  locationName: string;
+  /** 地理編碼 */
+  geocode: string;
+  /** 緯度 */
+  latitude: string;
+  /** 經度 */
+  longitude: string;
+
+  // 以下為展平後的天氣數據，若該測站沒提供則為 undefined
+  temperature?: TimeValueMap;
+  dewPoint?: TimeValueMap;
+  relativeHumidity?: TimeValueMap;
+  apparentTemperature?: TimeValueMap;
+  comfortIndex?: TimeValueMap;
+  comfortIndexDescription?: TimeValueMap;
+  windSpeed?: TimeValueMap;
+  beaufortScale?: TimeValueMap;
+  windDirection?: TimeValueMap;
+  probabilityOfPrecipitation?: TimeValueMap;
+  weather?: TimeValueMap;
+  weatherCode?: TimeValueMap;
+  weatherDescription?: TimeValueMap;
+}
+// #endregion
+
+export type { TownVillagePointResponse, WeatherResponse, SimplifiedWeatherResponse };

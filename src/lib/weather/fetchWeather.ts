@@ -1,6 +1,11 @@
 import { XMLParser } from "fast-xml-parser";
-import type { TownVillagePointResponse, WeatherResponse } from "@/types/weatherResponse";
+import type {
+  TownVillagePointResponse,
+  WeatherResponse,
+  SimplifiedWeatherResponse,
+} from "@/types/weatherResponse";
 import { CITY_NAME_TO_DATASET_ID } from "@/consts/weather/datasetToCity";
+import { transformWeatherData } from "./utils";
 
 const CWA_OPENAPI_ENDPOINT = "https://api.samhacker.xyz/cwa/v1/rest/datastore"; // 天氣API轉換端點URL
 const POSITION_TO_NAME_API = "https://api.nlsc.gov.tw/other/TownVillagePointQuery"; // 單點坐標回傳行政區
@@ -85,7 +90,7 @@ async function convertLocationToLocationName(
   }
 }
 
-async function fetchWeather(): Promise<WeatherResponse> {
+async function fetchWeather(): Promise<SimplifiedWeatherResponse> {
   // 取得使用者的經緯度
   const { latitude, longitude } = await getLattitudeLongitude();
 
@@ -116,7 +121,7 @@ async function fetchWeather(): Promise<WeatherResponse> {
     `[fetchWeather] Fetched weather data for dataset ID: ${datasetId}, location: ${locationResponse.townName}, Response: `,
     weatherData,
   );
-  return weatherData;
+  return transformWeatherData(weatherData);
 }
 
 export { fetchWeather, getLattitudeLongitude, convertLocationToLocationName };
