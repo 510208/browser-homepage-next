@@ -7,6 +7,7 @@ import BookmarkDialog from "./BookmarkDialog.vue";
 import { useBookmarks } from "./useBookmarks";
 import { cnUtils as cn } from "@/lib";
 import type { Bookmark } from "./types";
+import { Button } from "@/components/ui/button";
 
 const {
   bookmarks,
@@ -48,13 +49,14 @@ const emit = defineEmits<{
     </TooltipProvider>
 
     <div v-if="bookmarks.length < 10" class="flex h-12 w-12 items-center justify-center">
-      <button
-        type="button"
-        class="flex h-11 w-11 items-center justify-center rounded-full border-muted-foreground/60 bg-transparent text-muted-foreground transition-all hover:scale-115 hover:border-foreground hover:text-foreground"
+      <Button
+        variant="ghost"
+        size="icon-lg"
+        class="flex items-center justify-center rounded-full text-muted-foreground transition-all hover:scale-115 hover:border-foreground hover:text-foreground"
         @click="openAddDialog"
       >
-        <CirclePlus class="h-5 w-5" />
-      </button>
+        <CirclePlus />
+      </Button>
     </div>
 
     <BookmarkDialog

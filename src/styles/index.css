@@ -52,7 +52,7 @@
   --muted-foreground: var(--color-brown-400);
   --accent: var(--color-brown-500);
   --accent-foreground: var(--color-brown-100);
-  --destructive: var(--color-brown-500);
+  --destructive: var(--color-red-500);
   --border: var(--color-brown-700);
   --input: var(--color-brown-500);
   --ring: var(--color-brown-500);
