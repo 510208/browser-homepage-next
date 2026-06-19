@@ -1,2 +1,3 @@
 allowBuilds:
   opencc: true
+  vue-demi: true
