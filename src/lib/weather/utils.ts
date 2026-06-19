@@ -1,4 +1,4 @@
-import type { WeatherResponse, ElementValue } from "@/types/weatherResponse"; // 假設舊型別在此
+import type { WeatherResponse } from "@/types/weatherResponse";
 import type {
   SimplifiedWeatherResponse,
   SimplifiedLocation,
@@ -9,19 +9,19 @@ import type {
  * 將原始 ElementName 映射到新結構的屬性名稱
  */
 const ELEMENT_NAME_MAP: Record<string, keyof SimplifiedLocation> = {
-  Temperature: "temperature",
-  DewPoint: "dewPoint",
-  RelativeHumidity: "relativeHumidity",
-  ApparentTemperature: "apparentTemperature",
-  ComfortIndex: "comfortIndex",
-  ComfortIndexDescription: "comfortIndexDescription",
-  WindSpeed: "windSpeed",
-  BeaufortScale: "beaufortScale",
-  WindDirection: "windDirection",
-  ProbabilityOfPrecipitation: "probabilityOfPrecipitation",
-  Weather: "weather",
-  WeatherCode: "weatherCode",
-  WeatherDescription: "weatherDescription",
+  溫度: "temperature",
+  露點溫度: "dewPoint",
+  相對濕度: "relativeHumidity",
+  體感溫度: "apparentTemperature",
+  舒適度指數: "comfortIndex",
+  舒適度指數說明: "comfortIndexDescription",
+  風速: "windSpeed",
+  蒲福風級: "beaufortScale",
+  風向: "windDirection",
+  降雨機率: "probabilityOfPrecipitation",
+  天氣現象: "weather",
+  天氣代碼: "weatherCode",
+  天氣預報綜合描述: "weatherDescription",
 };
 
 export function transformWeatherData(raw: WeatherResponse): SimplifiedWeatherResponse {
@@ -32,7 +32,6 @@ export function transformWeatherData(raw: WeatherResponse): SimplifiedWeatherRes
       locationsName: locGroup.LocationsName,
       dataId: locGroup.Dataid,
       locations: locGroup.Location.map((loc): SimplifiedLocation => {
-        // 初始化基本資訊
         const resultLoc: SimplifiedLocation = {
           locationName: loc.LocationName,
           geocode: loc.Geocode,
@@ -40,32 +39,35 @@ export function transformWeatherData(raw: WeatherResponse): SimplifiedWeatherRes
           longitude: loc.Longitude,
         };
 
-        // 處理天氣元素
         loc.WeatherElement.forEach((element) => {
           const rawName = element.ElementName;
           const targetKey = ELEMENT_NAME_MAP[rawName];
 
-          // 如果這個天氣元素是我們需要的，就進行轉換
+          // 當成功比對到中文的天氣元素名稱時才進行轉換
           if (targetKey) {
             const timeMap: TimeValueMap = {};
 
             element.Time.forEach((t) => {
-              // 優先取 DataTime，若無則取 StartTime（因預報格式可能不同）
               const timeKey = t.DataTime || t.StartTime || t.EndTime || "unknown_time";
-
-              // 取得該時間點的第一個值 (ElementValueBase 中不為空的那個值)
               const valObj = t.ElementValue[0];
+
               if (valObj) {
-                // 找出這個物件裡真正有值的欄位（例如 valObj.Temperature）
-                const actualValue = Object.values(valObj)[0];
-                if (actualValue !== undefined) {
+                // 優先取氣象署標準的 value 欄位，若無則依據原物件屬性動態取值
+                const actualValue =
+                  (valObj as any).value !== undefined
+                    ? (valObj as any).value
+                    : Object.values(valObj)[0];
+
+                if (actualValue !== undefined && actualValue !== null) {
                   timeMap[timeKey] = String(actualValue);
                 }
               }
             });
 
-            // 動態指派到結果物件中
-            (resultLoc as any)[targetKey] = timeMap;
+            // 確保該欄位有轉換出時間資料才進行寫入，避免產生空物件
+            if (Object.keys(timeMap).length > 0) {
+              (resultLoc as any)[targetKey] = timeMap;
+            }
           }
         });
 

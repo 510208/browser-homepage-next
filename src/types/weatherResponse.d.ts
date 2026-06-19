@@ -155,7 +155,6 @@ interface SimplifiedRecord {
  * 例如: { "2026-06-19 12:00:00": "32" }
  */
 export type TimeValueMap = Record<string, string>;
-
 export interface SimplifiedLocation {
   /** 地點名稱 (如：板橋區、西屯區) */
   locationName: string;

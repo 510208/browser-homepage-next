@@ -116,12 +116,14 @@ async function fetchWeather(): Promise<SimplifiedWeatherResponse> {
   }
 
   const weatherData: WeatherResponse = (await response.json()) as WeatherResponse;
+  const simplifiedData = transformWeatherData(weatherData);
 
   console.log(
     `[fetchWeather] Fetched weather data for dataset ID: ${datasetId}, location: ${locationResponse.townName}, Response: `,
-    weatherData,
+    simplifiedData,
   );
-  return transformWeatherData(weatherData);
+  console.debug(`[fetchWeather] Full weather response:`, weatherData);
+  return simplifiedData;
 }
 
 export { fetchWeather, getLattitudeLongitude, convertLocationToLocationName };
