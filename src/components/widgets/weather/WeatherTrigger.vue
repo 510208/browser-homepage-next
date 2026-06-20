@@ -1,12 +1,28 @@
 <template>
-  <div class="flex gap-1">
-    <img class="size-12" :src="weatherIcon" />
+  <div class="flex">
+    <div class="flex gap-1">
+      <img class="size-12" :src="weatherIcon" />
+    </div>
+    <div class="flex flex-col items-start justify-center gap-0">
+      <h1 class="text-2xl font-bold text-white">
+        {{
+          getClosestValueFromMap(weatherStore.weatherData?.records[0]?.locations[0]?.temperature) ||
+          "N/A"
+        }}°C
+      </h1>
+      <p class="text-base text-brown-200">
+        {{
+          getClosestValueFromMap(weatherStore.weatherData?.records[0]?.locations[0]?.weather) ||
+          "N/A"
+        }}
+      </p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useWeatherStore } from "@/stores/useWeatherStore";
-import { getWeatherIcon, getClosestWeatherCode } from "@/lib/weather/utils";
+import { getWeatherIcon, getClosestWeatherCode, getClosestValueFromMap } from "@/lib/weather/utils";
 import type { SimplifiedLocation } from "@/types/weatherResponse";
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import { fetchWeather } from "@/lib/weather/fetchWeather";

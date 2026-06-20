@@ -166,5 +166,45 @@ function getClosestWeatherCode(
   return closestCode;
 }
 
-export { transformWeatherData, getWeatherIcon, getClosestWeatherCode };
+/**
+ * 傳入 TimeValueMap，回傳與現在時間最接近的資料值
+ * @param timeMap 時間與數值的對照表 (e.g., { "2026-06-20 22:00:00": "32" })
+ * @param fallback 當沒有資料或解析失敗時的預設回傳值
+ * @returns 最接近現在時間的值，若無資料則回傳 fallback 或 null
+ */
+function getClosestValueFromMap(
+  timeMap: TimeValueMap | undefined,
+  fallback: string | null = null,
+): string | null {
+  // 1. 防禦機制：檢查 Map 是否存在且有資料
+  if (!timeMap || Object.keys(timeMap).length === 0) {
+    return fallback;
+  }
+
+  const targetTime = new Date().getTime();
+  let closestValue: string | null = null;
+  let minDifference = Infinity;
+
+  // 2. 遍歷所有時間點（Key）
+  for (const timeString of Object.keys(timeMap)) {
+    // 解決相容性：將氣象局的 "YYYY-MM-DD HH:mm:ss" 轉換為標準 ISO 格式 "YYYY-MM-DDTHH:mm:ss"
+    const timestamp = Date.parse(timeString.replace(" ", "T"));
+
+    // 如果時間字串解析失敗（NaN），跳過該筆
+    if (isNaN(timestamp)) continue;
+
+    // 計算與現在時間的絕對差距（毫秒）
+    const difference = Math.abs(targetTime - timestamp);
+
+    // 如果找到更接近的時間點，更新結果
+    if (difference < minDifference) {
+      minDifference = difference;
+      closestValue = timeMap[timeString];
+    }
+  }
+
+  return closestValue !== null ? closestValue : fallback;
+}
+
+export { transformWeatherData, getWeatherIcon, getClosestWeatherCode, getClosestValueFromMap };
 export type { SimplifiedWeatherResponse, SimplifiedLocation, TimeValueMap };
