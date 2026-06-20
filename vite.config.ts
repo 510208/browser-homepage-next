@@ -1,12 +1,23 @@
-import { defineConfig } from "vite";
+import { defineConfig, type PluginOption } from "vite";
 
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
+import { visualizer } from "rollup-plugin-visualizer";
+
 import { fileURLToPath, URL } from "node:url";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), tailwindcss()],
+  plugins: [
+    vue(),
+    tailwindcss(),
+    visualizer({
+      open: true, // 打包完自動打開瀏覽器看分析圖
+      filename: "stats.html", // 產出的分析檔名
+      gzipSize: true, // 顯示 gzip 後的大小，更貼近實際網路傳輸
+      brotliSize: true,
+    }) as PluginOption,
+  ],
 
   resolve: {
     tsconfigPaths: true,
