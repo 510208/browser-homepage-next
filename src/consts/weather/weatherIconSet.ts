@@ -38,5 +38,29 @@ const WEATHER_ICON_SET: Record<string, string> = {
   "35": "thunder",
   "36": "thunder",
   "37": "snow",
-  // 38以下還沒做
+  "38": "mist",
+  "39": "mist",
+  "40": "mist",
+  "41": "mist",
+  "42": "snow",
 };
+
+// 所有天氣圖示種類
+const WEATHER_ICON_TYPES = Object.values(WEATHER_ICON_SET);
+
+/**
+ * 根據天氣代碼與時間，取得 Vite 優化後的 SVG 圖片路徑
+ * @param weatherCode CWA 天氣代碼 (e.g., "01")
+ * @param time "day" 或 "night"
+ */
+function getWeatherIcon(weatherCode: string, time: "day" | "night"): string {
+  const iconName = WEATHER_ICON_SET[weatherCode] || "sunny";
+
+  const fileName = `${iconName}_${time}.svg`;
+
+  const imageUrl = new URL(`../assets/weather-icons/${fileName}`, import.meta.url).href;
+
+  return imageUrl;
+}
+
+export { WEATHER_ICON_SET, WEATHER_ICON_TYPES, getWeatherIcon };
