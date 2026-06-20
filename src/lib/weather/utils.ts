@@ -117,7 +117,7 @@ function getWeatherIcon(weatherCode: string, time: "day" | "night"): string {
 
   if (fileName === undefined) {
     // console.warn(`找不到對應的天氣圖示，使用預設圖示: ${fileName}`);
-    return new URL(`../assets/weather-icons/sunny_day.svg`, import.meta.url).href;
+    return `/weather-icons/sunny_${time}.svg`;
   }
 
   return imageUrl;
