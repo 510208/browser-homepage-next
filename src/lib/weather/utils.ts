@@ -70,9 +70,6 @@ function transformWeatherData(raw: WeatherResponse): SimplifiedWeatherResponse {
             return; // 處理完天氣現象，直接跳過下方的一般邏輯
           }
 
-          // ----------------------------------------------------
-          // 🔄 以下維持你原本的一般元素處理邏輯（溫度、濕度等）
-          // ----------------------------------------------------
           const targetKey = ELEMENT_NAME_MAP[rawName];
 
           if (targetKey) {
@@ -116,10 +113,10 @@ function getWeatherIcon(weatherCode: string, time: "day" | "night"): string {
 
   const fileName = `${iconName}_${time}`;
   const imageUrl = `/weather-icons/${fileName}.svg`;
-  console.log(`嘗試載入天氣圖示: ${fileName}，URL: ${imageUrl}`);
+  // console.log(`嘗試載入天氣圖示: ${fileName}，URL: ${imageUrl}`);
 
   if (fileName === undefined) {
-    console.warn(`找不到對應的天氣圖示，使用預設圖示: ${fileName}`);
+    // console.warn(`找不到對應的天氣圖示，使用預設圖示: ${fileName}`);
     return new URL(`../assets/weather-icons/sunny_day.svg`, import.meta.url).href;
   }
 

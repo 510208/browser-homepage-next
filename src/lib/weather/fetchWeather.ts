@@ -49,7 +49,7 @@ async function convertLocationToLocationName(
   const data = await response.text();
   const parser = new XMLParser();
   const parsedData = parser.parse(data); // JSON格式
-  console.log("[fetchWeather/convertLocationToLocationName] Parsed location data:", parsedData);
+  // console.log("[fetchWeather/convertLocationToLocationName] Parsed location data:", parsedData);
 
   let townVillageItem: TownVillagePointResponse;
 
@@ -57,7 +57,7 @@ async function convertLocationToLocationName(
   try {
     townVillageItem = parsedData?.townVillageItem;
     console.log(
-      "[fetchWeather/convertLocationToLocationName] Parsed location object:",
+      // "[fetchWeather/convertLocationToLocationName] Parsed location object:",
       townVillageItem,
     );
   } catch (error) {
@@ -75,11 +75,11 @@ async function convertLocationToLocationName(
     if (!datasetId) {
       throw new Error(`No dataset ID found for city name: ${cityName}`);
     }
-    console.log(
-      "[fetchWeather/convertLocationToLocationName] Mapped city name to dataset ID:",
-      cityName,
-      datasetId,
-    );
+    // console.log(
+    //   "[fetchWeather/convertLocationToLocationName] Mapped city name to dataset ID:",
+    //   cityName,
+    //   datasetId,
+    // );
     return { id: datasetId, response: townVillageItem };
   } catch (error) {
     console.error(

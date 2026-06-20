@@ -24,7 +24,7 @@ async function updateWeatherAndTimes() {
 
     // 同步更新時間，確保日夜狀態正確
     currentHour.value = new Date().getHours();
-    console.log("[Weather] API 與時間已成功自動更新");
+    // console.log("[Weather] API 與時間已成功自動更新");
   } catch (error) {
     console.error("[Weather] 自動更新失敗:", error);
   }
@@ -37,14 +37,14 @@ onMounted(async () => {
     await updateWeatherAndTimes();
   }, 600000);
 
-  console.log("WeatherTrigger mounted, 輪詢定時器已啟動 ID: ", updateTimer);
+  // console.log("WeatherTrigger mounted, 輪詢定時器已啟動 ID: ", updateTimer);
 });
 
 onUnmounted(() => {
   // 元件銷毀時清除定時器
   if (updateTimer) {
     clearInterval(updateTimer);
-    console.log("WeatherTrigger unmounted, 定時器已清除");
+    // console.log("WeatherTrigger unmounted, 定時器已清除");
   }
 });
 
@@ -57,7 +57,7 @@ const weatherIcon = computed(() => {
   }
 
   const currentCode = getClosestWeatherCode(targetLocation as SimplifiedLocation);
-  console.log("currentCode", currentCode);
+  // console.log("[Weather] currentCode", currentCode);
 
   return getWeatherIcon(currentCode || "01", time);
 });
