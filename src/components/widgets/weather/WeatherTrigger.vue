@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex" id="sh-weather-trigger" @click="updateWeatherAndTimes">
     <div class="flex gap-1">
       <img class="size-12" :src="weatherIcon" />
     </div>
