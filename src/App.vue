@@ -1,19 +1,21 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
+
 import { Clock } from "@/components/widgets/clock";
 import { SearchBox } from "@/components/widgets/search-box";
 import { Quote } from "@/components/widgets/quote";
 import { Avatar } from "@/components/widgets/avatar";
 import { Weather } from "@/components/widgets/weather";
-
-import { BottomCenter, RightTop, LeftTop } from "@/components/container";
 import Bookmarks from "@/components/widgets/bookmarks/Bookmarks.vue";
 
+import { BottomCenter, RightTop, LeftTop } from "@/components/container";
+
 import { fetchWeather } from "@/lib/weather/fetchWeather";
-
 import { useWeatherStore } from "@/stores/useWeatherStore";
-
 const weatherStore = useWeatherStore();
-weatherStore.setWeatherData(await fetchWeather());
+onMounted(async () => {
+  weatherStore.setWeatherData(await fetchWeather());
+});
 </script>
 
 <template>
