@@ -3,7 +3,7 @@
     <HoverCardTrigger>
       <WeatherTrigger />
     </HoverCardTrigger>
-    <HoverCardContent class="w-[300px]">
+    <HoverCardContent class="w-[300px]" align="start">
       <WeatherCard />
     </HoverCardContent>
   </HoverCard>
