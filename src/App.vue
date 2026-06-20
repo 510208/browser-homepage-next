@@ -3,14 +3,17 @@ import { Clock } from "@/components/widgets/clock";
 import { SearchBox } from "@/components/widgets/search-box";
 import { Quote } from "@/components/widgets/quote";
 import { Avatar } from "@/components/widgets/avatar";
+import { Weather } from "@/components/widgets/weather";
 
-import BottomCenter from "@/components/container/BottomCenter.vue";
-import RightTop from "@/components/container/RightTop.vue";
+import { BottomCenter, RightTop, LeftTop } from "@/components/container";
 import Bookmarks from "@/components/widgets/bookmarks/Bookmarks.vue";
 
 import { fetchWeather } from "@/lib/weather/fetchWeather";
 
-fetchWeather();
+import { useWeatherStore } from "@/stores/useWeatherStore";
+
+const weatherStore = useWeatherStore();
+weatherStore.setWeatherData(await fetchWeather());
 </script>
 
 <template>
@@ -27,6 +30,10 @@ fetchWeather();
       <Avatar />
       <Bookmarks class="mt-30" />
     </RightTop>
+
+    <LeftTop>
+      <Weather />
+    </LeftTop>
   </div>
 
   <div id="sh-background" class="pointer-events-none fixed top-0 left-0 -z-10 h-screen w-screen">
