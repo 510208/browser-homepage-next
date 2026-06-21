@@ -1,12 +1,12 @@
 <template>
-  <div :class="cn('relative p-2.5', props.class)">
+  <div :class="cn('relative overflow-hidden p-2.5', props.class)">
     <!-- 圖示 -->
-    <div class="fixed right-0 -bottom-[13px]">
+    <div class="absolute right-0 -bottom-[13px]">
       <slot name="icon" />
     </div>
 
     <!-- 內容 -->
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col gap-0.5">
       <slot />
     </div>
   </div>

@@ -1,5 +1,6 @@
 <template>
   <div class="relative flex flex-col gap-0">
+    <!-- 概覽 -->
     <div class="bg-brown-700 px-5 py-6">
       <!-- 天氣圖示 -->
       <div id="sh-weather-icon-wrapper" class="fixed top-0 right-0">
@@ -33,6 +34,59 @@
         </div>
       </div>
     </div>
+
+    <!-- 詳細資訊 -->
+    <div class="grid grid-cols-3 grid-rows-2 px-5 py-2.5">
+      <!-- 濕度 -->
+      <WeatherItemContainer>
+        <template #icon>
+          <Droplet :size="40" :stroke-width="1" class="text-brown-600 opacity-80" />
+        </template>
+        <p class="text-base font-light text-brown-500">濕度</p>
+        <p class="text-2xl font-semibold">
+          {{
+            getClosestValueFromMap(weatherData?.records[0]?.locations[0]?.relativeHumidity) ||
+            "N/A"
+          }}%
+        </p>
+      </WeatherItemContainer>
+      <WeatherItemContainer class="col-span-2">
+        <template #icon>
+          <Wind :size="40" :stroke-width="1" class="text-brown-600 opacity-80" />
+        </template>
+        <p class="text-base font-light text-brown-500">風</p>
+        <p class="text-2xl font-semibold">
+          {{
+            getClosestValueFromMap(weatherData?.records[0]?.locations[0]?.windSpeed) || "N/A"
+          }}級&nbsp;
+          {{
+            getClosestValueFromMap(weatherData?.records[0]?.locations[0]?.windDirection) || "N/A"
+          }}
+        </p>
+      </WeatherItemContainer>
+      <WeatherItemContainer>
+        <template #icon>
+          <Laugh :size="40" :stroke-width="1" class="text-brown-600 opacity-80" />
+        </template>
+        <p class="text-base font-light text-brown-500">舒適度指數</p>
+        <p class="text-2xl font-semibold">
+          {{ getClosestValueFromMap(weatherData?.records[0]?.locations[0]?.comfortIndex) || "N/A" }}
+        </p>
+      </WeatherItemContainer>
+      <WeatherItemContainer>
+        <template #icon>
+          <CloudRainWind :size="40" :stroke-width="1" class="text-brown-600 opacity-80" />
+        </template>
+        <p class="text-base font-light text-brown-500">降雨機率</p>
+        <p class="text-2xl font-semibold">
+          {{
+            getClosestValueFromMap(
+              weatherData?.records[0]?.locations[0]?.probabilityOfPrecipitation,
+            ) || "N/A"
+          }}%
+        </p>
+      </WeatherItemContainer>
+    </div>
   </div>
 </template>
 
@@ -45,6 +99,8 @@ import {
 } from "@/lib/weather/utils";
 import { useWeatherStore } from "@/stores/useWeatherStore";
 import { computed, ref } from "vue";
+import WeatherItemContainer from "./WeatherItemContainer.vue";
+import { CloudRainWind, Droplet, Laugh, Wind } from "@lucide/vue";
 
 /**
  * 擷取最高溫度到最低溫度
