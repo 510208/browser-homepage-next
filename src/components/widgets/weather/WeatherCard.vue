@@ -36,7 +36,7 @@
     </div>
 
     <!-- 詳細資訊 -->
-    <div class="grid grid-cols-3 grid-rows-2 px-5 py-2.5">
+    <div class="grid grid-cols-3 grid-rows-2 gap-0.5 px-5 py-2.5">
       <!-- 濕度 -->
       <WeatherItemContainer>
         <template #icon>
@@ -97,8 +97,24 @@
         class="group relative flex items-center justify-between gap-2 overflow-hidden p-2.5 text-brown-500"
       >
         <p class="transition-colors duration-300 group-hover:text-brown-600">檢視更多</p>
-        <ArrowRight class="transition-colors duration-300 group-hover:text-brown-600" />
       </a>
+    </div>
+
+    <!-- 三天天氣概況 -->
+    <div class="flex flex-col gap-2.5 px-5 py-3.5">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-semibold text-white">三天天氣概況</h3>
+        <a
+          href="https://www.cwa.gov.tw/V8/C/W/week.html"
+          class="group relative flex items-center justify-between gap-2 overflow-hidden p-2.5 text-brown-500"
+        >
+          <p class="transition-colors duration-300 group-hover:text-brown-600">檢視更多</p>
+          <ArrowRight
+            class="ml-0 transition-all duration-300 group-hover:ml-2 group-hover:text-brown-600"
+          />
+        </a>
+      </div>
+      <div class="flex items-center justify-start gap-3"></div>
     </div>
   </div>
 </template>
