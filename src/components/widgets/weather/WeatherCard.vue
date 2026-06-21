@@ -70,6 +70,12 @@
         </template>
         <p class="text-base font-light text-brown-500">舒適度指數</p>
         <p class="text-2xl font-semibold">
+          {{
+            getClosestValueFromMap(
+              weatherData?.records[0]?.locations[0]?.comfortIndexDescription,
+            ) || "N/A"
+          }}
+          &nbsp;
           {{ getClosestValueFromMap(weatherData?.records[0]?.locations[0]?.comfortIndex) || "N/A" }}
         </p>
       </WeatherItemContainer>
