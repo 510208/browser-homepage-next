@@ -1,3 +1,4 @@
 allowBuilds:
+  maplibre-gl: true
   opencc: true
   vue-demi: true
