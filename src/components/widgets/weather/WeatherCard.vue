@@ -3,7 +3,7 @@
     <!-- 概覽 -->
     <div class="bg-brown-700 px-5 py-6">
       <!-- 天氣圖示 -->
-      <div id="sh-weather-icon-wrapper" class="fixed top-0 right-0">
+      <div id="sh-weather-icon-wrapper" class="fixed top-0 right-0 overflow-hidden">
         <img id="sh-weather-icon" class="size-30" :src="weatherIcon" />
       </div>
 
@@ -101,6 +101,15 @@
     </div>
 
     <WeatherThreeDayForecast />
+
+    <div class="flex w-full justify-end px-5 py-2.5">
+      <div class="flex items-center justify-end text-brown-700">
+        <p>Powered by:</p>
+        <a href="https://www.cwa.gov.tw/V8/C/" class="group relative ml-1">
+          <img src="@/assets/logos/cwa-logo.svg" alt="中央氣象局" class="h-4" />
+        </a>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -157,9 +166,11 @@ const weatherIcon = computed(() => {
 </script>
 
 <style scoped>
-#sh-weather-icon-wrapper {
-  background:
-    radial-gradient(26.68% 26.68% at 60% 39.58%, #f3712d 0%, rgba(154, 94, 76, 0) 90%),
-    radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0.4) 0%, rgba(153, 153, 153, 0) 90%);
-}
+/* #sh-weather-icon-wrapper {
+  background: radial-gradient(
+    140% 140% at 100% 0%,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(153, 153, 153, 0) 70%
+  );
+} */
 </style>
