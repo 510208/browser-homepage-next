@@ -176,7 +176,7 @@ function getClosestValueFromMap(
   timeMap: TimeValueMap | undefined,
   fallback: string | null = null,
 ): string | null {
-  console.log(`getClosestValueFromMap: timeMap=${JSON.stringify(timeMap)}, fallback=${fallback}`);
+  // console.log(`getClosestValueFromMap: timeMap=${JSON.stringify(timeMap)}, fallback=${fallback}`);
   // 檢查 Map 是否存在且有資料
   if (!timeMap || Object.keys(timeMap).length === 0) {
     return fallback;
@@ -204,7 +204,7 @@ function getClosestValueFromMap(
     }
   }
 
-  console.log(`getClosestValueFromMap: closestValue=${closestValue}, fallback=${fallback}`);
+  // console.log(`getClosestValueFromMap: closestValue=${closestValue}, fallback=${fallback}`);
   return closestValue !== null ? closestValue : fallback;
 }
 
