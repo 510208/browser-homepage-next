@@ -166,18 +166,31 @@ export interface SimplifiedLocation {
   longitude: string;
 
   // 以下為展平後的天氣數據，若該測站沒提供則為 undefined
+  /** 溫度 */
   temperature?: TimeValueMap;
+  /** 露點 */
   dewPoint?: TimeValueMap;
+  /** 相對濕度 */
   relativeHumidity?: TimeValueMap;
+  /** 體感溫度 */
   apparentTemperature?: TimeValueMap;
+  /** 舒適指數 */
   comfortIndex?: TimeValueMap;
+  /** 舒適指數描述 */
   comfortIndexDescription?: TimeValueMap;
+  /** 風速 */
   windSpeed?: TimeValueMap;
+  /** 風力等級 */
   beaufortScale?: TimeValueMap;
+  /** 風向 */
   windDirection?: TimeValueMap;
+  /** 降水機率 */
   probabilityOfPrecipitation?: TimeValueMap;
+  /** 天氣現象 */
   weather?: TimeValueMap;
+  /** 天氣代碼 */
   weatherCode?: TimeValueMap;
+  /** 天氣描述 */
   weatherDescription?: TimeValueMap;
 }
 // #endregion
