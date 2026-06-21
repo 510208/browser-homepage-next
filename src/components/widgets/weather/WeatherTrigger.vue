@@ -3,7 +3,7 @@
     <div class="flex gap-1">
       <img class="size-12" :src="weatherIcon" />
     </div>
-    <div class="flex flex-col items-start justify-center gap-0">
+    <div class="flex w-15 flex-col items-start justify-center gap-0">
       <h1 class="text-2xl font-bold text-white">
         {{
           getClosestValueFromMap(weatherStore.weatherData?.records[0]?.locations[0]?.temperature) ||
