@@ -92,6 +92,13 @@
           }}%
         </p>
       </WeatherItemContainer>
+      <a
+        href="https://www.cwa.gov.tw/V8/C/W/Town/index.html"
+        class="group relative flex items-center justify-between gap-2 overflow-hidden p-2.5 text-brown-500"
+      >
+        <p class="transition-colors duration-300 group-hover:text-brown-600">檢視更多</p>
+        <ArrowRight class="transition-colors duration-300 group-hover:text-brown-600" />
+      </a>
     </div>
   </div>
 </template>
@@ -106,7 +113,7 @@ import {
 import { useWeatherStore } from "@/stores/useWeatherStore";
 import { computed, ref } from "vue";
 import WeatherItemContainer from "./WeatherItemContainer.vue";
-import { CloudRainWind, Droplet, Laugh, Wind } from "@lucide/vue";
+import { ArrowRight, CloudRainWind, Droplet, Laugh, Wind } from "@lucide/vue";
 
 /**
  * 擷取最高溫度到最低溫度
