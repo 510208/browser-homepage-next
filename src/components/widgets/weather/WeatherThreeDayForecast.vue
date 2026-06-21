@@ -1,5 +1,4 @@
 <template>
-  <!-- 三天天氣概況 -->
   <div class="flex flex-col gap-2.5 px-5 py-3.5">
     <div class="flex items-center justify-between">
       <h3 class="text-lg font-semibold text-white">三天天氣概況</h3>
@@ -16,13 +15,38 @@
     <div class="relative w-full">
       <div
         ref="forecastWrapper"
-        class="flex scrollbar-none gap-3 overflow-x-auto"
+        class="relative flex scrollbar-none gap-0 overflow-x-auto pb-4"
         id="sh-weather-forecast-wrapper"
       >
+        <div
+          v-if="threeDayForecast.length > 0"
+          class="pointer-events-none absolute bottom-0 left-0 z-0 h-24"
+          :style="{ width: chartCanvasWidth + 'px' }"
+        >
+          <ChartContainer :config="chartConfig" class="h-full w-full">
+            <VisXYContainer :data="threeDayForecast" :margin="chartMargin" :y-domain="yDomain">
+              <VisArea
+                :x="(d: ForecastItem) => d.timeKey"
+                :y="(d: ForecastItem) => parseFloat(d.temperature)"
+                color="var(--chart-temperature)"
+                :opacity="0.15"
+              />
+
+              <VisLine
+                :x="(d: ForecastItem) => d.timeKey"
+                :y="(d: ForecastItem) => parseFloat(d.temperature)"
+                color="var(--chart-temperature)"
+                :stroke-width="2"
+              />
+            </VisXYContainer>
+          </ChartContainer>
+        </div>
+
         <WeatherForecastItem
           v-for="forecast in threeDayForecast"
           :key="forecast.timeKey"
           :forecast="forecast"
+          class="z-10 min-w-[76px] flex-1"
         />
       </div>
 
@@ -42,14 +66,21 @@
 
 <script setup lang="ts">
 import { getWeatherIcon } from "@/lib/weather/utils.ts";
-import { computed, ref, onMounted, onUnmounted } from "vue";
+import { computed, ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 import WeatherForecastItem from "./WeatherForecastItem.vue";
 import { ArrowRight } from "@lucide/vue";
 import type { ForecastItem } from "./WeatherForecastItem.vue";
 import { useWeatherStore } from "@/stores/useWeatherStore";
 
+// 引入 Shadcn / Unovis 圖表組件
+import { VisXYContainer, VisLine, VisArea } from "@unovis/vue";
+import { ChartContainer, type ChartConfig } from "@/components/ui/chart";
+
 const weatherStore = useWeatherStore();
 const weatherData = computed(() => weatherStore.weatherData);
+
+// 響應式儲存滾動容器實際內襯總寬度
+const wrapperScrollWidth = ref(0);
 
 /**
  * 將 ISO 時間字串格式化為易讀的日期與時間
@@ -57,11 +88,7 @@ const weatherData = computed(() => weatherStore.weatherData);
 function formatDisplayDate(timeStr: string) {
   try {
     const date = new Date(timeStr);
-    // const months = date.getMonth() + 1;
-    // const days = date.getDate();
     const hours = String(date.getHours()).padStart(2, "0");
-    // const minutes = String(date.getMinutes()).padStart(2, "0");
-
     const weekdayMap = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
     const weekday = weekdayMap[date.getDay()];
 
@@ -117,42 +144,36 @@ const threeDayForecast = computed(() => {
     });
 });
 
-// 偵測sh-weather-forecast-wrapper的捲動位置，並顯示或隱藏左右遮罩
 const forecastWrapper = ref<HTMLElement | null>(null);
 const showLeftMask = ref(false);
 const showRightMask = ref(false);
 
 /**
- * 計算並更新左右遮罩的顯示狀態
+ * 計算並更新左右遮罩的顯示狀態與實際總寬度
  */
 function updateMasks() {
   if (!forecastWrapper.value) return;
 
   const { scrollLeft, scrollWidth, clientWidth } = forecastWrapper.value;
 
-  // 當捲動距離大於 0 時，顯示左側淡出遮罩
   showLeftMask.value = scrollLeft > 1;
-
-  // 當總寬度大於視窗寬度，且尚未捲動到最右端時，顯示右側淡出遮罩
-  // 加上 1 像素的緩衝以避免部分瀏覽器因為浮點數四捨五入導致計算不精準
   showRightMask.value = scrollLeft + clientWidth < scrollWidth - 1;
+
+  // 同步當前滾動容器內部的總寬度
+  wrapperScrollWidth.value = scrollWidth;
 }
 
-// 建立尺寸監聽器，捕捉內容因資料載入或視窗縮放帶來的寬度變化
 let resizeObserver: ResizeObserver | null = null;
 
 onMounted(() => {
   if (forecastWrapper.value) {
-    // 綁定原生滾動事件
     forecastWrapper.value.addEventListener("scroll", updateMasks);
 
-    // 初始化 ResizeObserver
     resizeObserver = new ResizeObserver(() => {
       updateMasks();
     });
     resizeObserver.observe(forecastWrapper.value);
 
-    // 執行初始檢查
     updateMasks();
   }
 });
@@ -164,6 +185,72 @@ onUnmounted(() => {
   if (resizeObserver) {
     resizeObserver.disconnect();
   }
+});
+
+// 當非同步資料載入並完成 DOM 渲染後，重新觸發尺寸狀態計算
+watch(
+  () => threeDayForecast.value,
+  () => {
+    nextTick(() => {
+      updateMasks();
+    });
+  },
+  { deep: true },
+);
+
+/**
+ * 圖表寬度映射綁定
+ */
+const chartCanvasWidth = computed(() => {
+  return wrapperScrollWidth.value || 0;
+});
+
+/**
+ * Shadcn 圖表色彩配置設定
+ */
+const chartConfig = {
+  temperature: {
+    label: "溫度",
+    color: "#f3712d",
+  },
+} satisfies ChartConfig;
+
+/**
+ * 計算屬性：動態調整 Y 軸域，確保折線置中
+ */
+const yDomain = computed<[number, number]>(() => {
+  const dataset = threeDayForecast.value;
+  if (dataset.length === 0) return [0, 40];
+
+  const temps = dataset.map((d) => parseFloat(d.temperature)).filter((t) => !isNaN(t));
+
+  if (temps.length === 0) return [0, 40];
+
+  const min = Math.min(...temps);
+  const max = Math.max(...temps);
+
+  // 邊界上下留空 2 度，防止拐點貼緊圖表上下邊緣
+  return [min - 2, max + 2];
+});
+
+/**
+ * 計算屬性：調整邊距補償
+ * 左右內縮半個元件的寬度，修正 Unovis 起始點與 WeatherForecastItem 置中位置對齊
+ */
+const chartMargin = computed(() => {
+  const dataset = threeDayForecast.value;
+  if (dataset.length === 0 || chartCanvasWidth.value === 0) {
+    return { left: 0, right: 0, top: 20, bottom: 0 };
+  }
+  const itemWidth = chartCanvasWidth.value / dataset.length;
+  const halfItemWidth = itemWidth / 2;
+
+  return {
+    left: halfItemWidth,
+    right: halfItemWidth,
+    top: 20,
+    bottom: 0,
+  };
 });
 </script>
 
@@ -179,5 +266,12 @@ onUnmounted(() => {
 
 .sh-shadow-mask[data-show="true"] {
   opacity: 1;
+}
+
+/* 將色彩屬性注入全域 CSS 變數，供內部 Unovis 圖表模組進行讀取 */
+:thin-root,
+:host,
+::v-deep(*) {
+  --chart-temperature: #f3712d;
 }
 </style>
