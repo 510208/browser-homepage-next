@@ -7,6 +7,9 @@ import { Weather } from "@/components/widgets/weather";
 import Bookmarks from "@/components/widgets/bookmarks/Bookmarks.vue";
 
 import { BottomCenter, RightTop, LeftTop } from "@/components/container";
+
+import "vue-sonner/style.css";
+import { Toaster } from "@/components/ui/sonner";
 </script>
 
 <template>
@@ -39,4 +42,6 @@ import { BottomCenter, RightTop, LeftTop } from "@/components/container";
       class="h-full w-full object-cover"
     />
   </div>
+
+  <Toaster />
 </template>
