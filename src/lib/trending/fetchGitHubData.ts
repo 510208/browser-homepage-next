@@ -32,7 +32,7 @@ async function parseResponse(): Promise<GitHubData> {
     html_url: data.html_url,
     followers: data.followers,
     public_repos: data.public_repos,
-  };
+  } as GitHubData;
 }
 
 export { type GitHubData, fetchData, parseResponse };
