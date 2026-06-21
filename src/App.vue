@@ -5,8 +5,9 @@ import { Quote } from "@/components/widgets/quote";
 import { Avatar } from "@/components/widgets/avatar";
 import { Weather } from "@/components/widgets/weather";
 import Bookmarks from "@/components/widgets/bookmarks/Bookmarks.vue";
+import { TrendingBadgeList } from "@/components/widgets/trending-badges";
 
-import { BottomCenter, RightTop, LeftTop } from "@/components/container";
+import { BottomCenter, RightTop, LeftTop, LeftBottom } from "@/components/container";
 
 import "vue-sonner/style.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -30,6 +31,10 @@ import { Toaster } from "@/components/ui/sonner";
     <LeftTop>
       <Weather />
     </LeftTop>
+
+    <LeftBottom>
+      <TrendingBadgeList />
+    </LeftBottom>
   </div>
 
   <div id="sh-background" class="pointer-events-none fixed top-0 left-0 -z-10 h-screen w-screen">
