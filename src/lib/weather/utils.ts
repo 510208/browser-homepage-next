@@ -176,7 +176,8 @@ function getClosestValueFromMap(
   timeMap: TimeValueMap | undefined,
   fallback: string | null = null,
 ): string | null {
-  // 1. 防禦機制：檢查 Map 是否存在且有資料
+  console.log(`getClosestValueFromMap: timeMap=${JSON.stringify(timeMap)}, fallback=${fallback}`);
+  // 檢查 Map 是否存在且有資料
   if (!timeMap || Object.keys(timeMap).length === 0) {
     return fallback;
   }
@@ -185,7 +186,7 @@ function getClosestValueFromMap(
   let closestValue: string | null = null;
   let minDifference = Infinity;
 
-  // 2. 遍歷所有時間點（Key）
+  // 遍歷所有時間點（Key）
   for (const timeString of Object.keys(timeMap)) {
     // 解決相容性：將氣象局的 "YYYY-MM-DD HH:mm:ss" 轉換為標準 ISO 格式 "YYYY-MM-DDTHH:mm:ss"
     const timestamp = Date.parse(timeString.replace(" ", "T"));
@@ -203,6 +204,7 @@ function getClosestValueFromMap(
     }
   }
 
+  console.log(`getClosestValueFromMap: closestValue=${closestValue}, fallback=${fallback}`);
   return closestValue !== null ? closestValue : fallback;
 }
 

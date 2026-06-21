@@ -20,6 +20,9 @@ function getLattitudeLongitude(): Promise<{ latitude: number; longitude: number 
       navigator.geolocation.getCurrentPosition(
         // 成功時的回調
         (position) => {
+          console.log(
+            `[fetchWeather/getLattitudeLongitude] Obtained location: latitude=${position.coords.latitude}, longitude=${position.coords.longitude}`,
+          );
           resolve({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
