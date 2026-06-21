@@ -182,8 +182,8 @@ function formatTemperature(text: string): string | null {
 function formatDisplayDate(timeStr: string) {
   try {
     const date = new Date(timeStr);
-    const months = date.getMonth() + 1;
-    const days = date.getDate();
+    // const months = date.getMonth() + 1;
+    // const days = date.getDate();
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
 
@@ -191,8 +191,8 @@ function formatDisplayDate(timeStr: string) {
     const weekday = weekdayMap[date.getDay()];
 
     return {
-      date: `${months}/${days} (${weekday})`,
-      time: `${hours}:${minutes}`,
+      date: `${weekday}`,
+      time: `${hours}時`,
       hourValue: date.getHours(),
     };
   } catch (e) {

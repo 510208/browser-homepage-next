@@ -10,6 +10,7 @@
       </span>
 
       <span class="text-sm font-normal text-brown-400/80">
+        {{ forecast.displayDate }}<br />
         {{ forecast.displayTime }}
       </span>
     </div>
