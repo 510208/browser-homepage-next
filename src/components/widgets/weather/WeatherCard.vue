@@ -2,7 +2,9 @@
   <div class="relative flex flex-col gap-0">
     <div class="bg-brown-700 px-5 py-6">
       <!-- 天氣圖示 -->
-      <div class="fixed top-0 right-0"><img class="size-30" :src="weatherIcon" /></div>
+      <div id="sh-weather-icon-wrapper" class="fixed top-0 right-0">
+        <img id="sh-weather-icon" class="size-30" :src="weatherIcon" />
+      </div>
 
       <!-- 天氣資訊 -->
       <div class="flex flex-col items-start gap-2.5">
@@ -86,3 +88,11 @@ const weatherIcon = computed(() => {
 
 const weatherData = computed(() => weatherStore.weatherData);
 </script>
+
+<style scoped>
+#sh-weather-icon-wrapper {
+  background:
+    radial-gradient(26.68% 26.68% at 60% 39.58%, #f3712d 0%, rgba(154, 94, 76, 0) 90%),
+    radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0.4) 0%, rgba(153, 153, 153, 0) 90%);
+}
+</style>
