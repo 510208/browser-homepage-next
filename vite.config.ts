@@ -29,4 +29,17 @@ export default defineConfig({
       "@styles": fileURLToPath(new URL("./src/styles", import.meta.url)),
     },
   },
+
+  build: {
+    rolldownOptions: {
+      output: {
+        manualChunks(id) {
+          // 如果偵測到節點來自 opencc，就單獨打包成一個叫 opencc 的檔案
+          if (id.includes("node_modules/opencc-js") || id.includes("opencc")) {
+            return "opencc-vendor";
+          }
+        },
+      },
+    },
+  },
 });
