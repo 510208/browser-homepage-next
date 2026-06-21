@@ -11,8 +11,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import TrendingBadge from "./TrendingBadge.vue";
-import { GitHubIcon, YouTubeIcon } from "vue3-simple-icons";
-import { github, youtube } from "@/lib/trending";
+import { GitHubIcon, YouTubeIcon, WakaTimeIcon } from "vue3-simple-icons";
+import { github, youtube, wakatime } from "@/lib/trending";
 
 const badges = ref<any[]>([]);
 
@@ -20,6 +20,12 @@ onMounted(async () => {
   try {
     const githubContent = await github.parseResponse();
     const youtubeContent = await youtube.parseResponse();
+    const wakatimeContent = await wakatime.parseResponse();
+    // 將wakatimeContent.text (765 hrs 27 mins)轉換為765:27
+    const timeParts = wakatimeContent.text.split(" ");
+    const hours = timeParts[0];
+    const minutes = timeParts[2];
+    const formattedTime = `${hours}:${minutes}`;
 
     badges.value = [
       {
@@ -31,6 +37,11 @@ onMounted(async () => {
         name: "YouTube",
         icon: YouTubeIcon,
         content: youtubeContent.statistics.subscriberCount.toString(),
+      },
+      {
+        name: "WakaTime",
+        icon: WakaTimeIcon,
+        content: formattedTime,
       },
     ];
   } catch (error) {
