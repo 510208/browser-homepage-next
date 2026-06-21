@@ -19,7 +19,7 @@ const ELEMENT_NAME_MAP: Record<string, keyof SimplifiedLocation> = {
   風速: "windSpeed",
   蒲福風級: "beaufortScale",
   風向: "windDirection",
-  降雨機率: "probabilityOfPrecipitation",
+  "3小時降雨機率": "probabilityOfPrecipitation",
   天氣現象: "weather",
   天氣代碼: "weatherCode",
   天氣預報綜合描述: "weatherDescription",
