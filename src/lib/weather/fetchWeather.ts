@@ -6,6 +6,7 @@ import type {
 } from "@/types/weatherResponse";
 import { CITY_NAME_TO_DATASET_ID } from "@/consts/weather/datasetToCity";
 import { transformWeatherData } from "./utils";
+import { toast } from "vue-sonner";
 
 const CWA_OPENAPI_ENDPOINT = "https://api.samhacker.xyz/cwa/v1/rest/datastore"; // 天氣API轉換端點URL
 const POSITION_TO_NAME_API = "https://api.nlsc.gov.tw/other/TownVillagePointQuery"; // 單點坐標回傳行政區
@@ -126,6 +127,15 @@ async function fetchWeather(): Promise<SimplifiedWeatherResponse> {
     simplifiedData,
   );
   console.debug(`[fetchWeather] Full weather response:`, weatherData);
+
+  // 檢查轉換後的資料是否有dataId，若沒有則丟出錯誤
+  if (
+    !simplifiedData.records ||
+    simplifiedData.records.length === 0 ||
+    !simplifiedData.records[0].dataId
+  ) {
+    toast.error("取得天氣資料異常，請稍後再試或切換至精確定位網路");
+  }
   return simplifiedData;
 }
 
