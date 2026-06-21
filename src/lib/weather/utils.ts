@@ -1,107 +1,10 @@
 import { WEATHER_ICON_SET } from "@/consts/weather/weatherIconSet";
-import type { WeatherResponse } from "@/types/weatherResponse";
 import type {
   SimplifiedWeatherResponse,
   SimplifiedLocation,
   TimeValueMap,
 } from "@/types/weatherResponse";
-
-/**
- * 將原始 ElementName 映射到新結構的屬性名稱
- */
-const ELEMENT_NAME_MAP: Record<string, keyof SimplifiedLocation> = {
-  溫度: "temperature",
-  露點溫度: "dewPoint",
-  相對濕度: "relativeHumidity",
-  體感溫度: "apparentTemperature",
-  舒適度指數: "comfortIndex",
-  舒適度指數說明: "comfortIndexDescription",
-  風速: "windSpeed",
-  蒲福風級: "beaufortScale",
-  風向: "windDirection",
-  "3小時降雨機率": "probabilityOfPrecipitation",
-  天氣現象: "weather",
-  天氣代碼: "weatherCode",
-  天氣預報綜合描述: "weatherDescription",
-};
-
-function transformWeatherData(raw: WeatherResponse): SimplifiedWeatherResponse {
-  return {
-    success: raw.success,
-    records: (raw.records?.Locations || []).map((locGroup) => ({
-      datasetName: locGroup.DatasetDescription,
-      locationsName: locGroup.LocationsName,
-      dataId: locGroup.Dataid,
-      locations: locGroup.Location.map((loc): SimplifiedLocation => {
-        const resultLoc: SimplifiedLocation = {
-          locationName: loc.LocationName,
-          geocode: loc.Geocode,
-          latitude: loc.Latitude,
-          longitude: loc.Longitude,
-        };
-
-        loc.WeatherElement.forEach((element) => {
-          const rawName = element.ElementName;
-
-          // 🌟 特殊處理：當元素是「天氣現象」時，它同時包含 Weather 與 WeatherCode
-          if (rawName === "天氣現象") {
-            const weatherMap: TimeValueMap = {};
-            const weatherCodeMap: TimeValueMap = {};
-
-            element.Time.forEach((t) => {
-              const timeKey = t.DataTime || t.StartTime || t.EndTime || "unknown_time";
-              const valObj = t.ElementValue[0] as any;
-
-              if (valObj) {
-                // 明確抓取 Weather
-                if (valObj.Weather !== undefined) {
-                  weatherMap[timeKey] = String(valObj.Weather);
-                }
-                // 明確抓取 WeatherCode
-                if (valObj.WeatherCode !== undefined) {
-                  weatherCodeMap[timeKey] = String(valObj.WeatherCode);
-                }
-              }
-            });
-
-            if (Object.keys(weatherMap).length > 0) resultLoc.weather = weatherMap;
-            if (Object.keys(weatherCodeMap).length > 0) resultLoc.weatherCode = weatherCodeMap;
-
-            return; // 處理完天氣現象，直接跳過下方的一般邏輯
-          }
-
-          const targetKey = ELEMENT_NAME_MAP[rawName];
-
-          if (targetKey) {
-            const timeMap: TimeValueMap = {};
-
-            element.Time.forEach((t) => {
-              const timeKey = t.DataTime || t.StartTime || t.EndTime || "unknown_time";
-              const valObj = t.ElementValue[0];
-
-              if (valObj) {
-                const actualValue =
-                  (valObj as any).value !== undefined
-                    ? (valObj as any).value
-                    : Object.values(valObj)[0];
-
-                if (actualValue !== undefined && actualValue !== null) {
-                  timeMap[timeKey] = String(actualValue);
-                }
-              }
-            });
-
-            if (Object.keys(timeMap).length > 0) {
-              (resultLoc as any)[targetKey] = timeMap;
-            }
-          }
-        });
-
-        return resultLoc;
-      }),
-    })),
-  };
-}
+import { transformWeatherData } from "./transform";
 
 /**
  * 根據天氣代碼與時間，取得 Vite 優化後的 SVG 圖片路徑
