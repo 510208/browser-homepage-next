@@ -1,5 +1,5 @@
 <template>
-  <HoverCard :open="true">
+  <HoverCard :openDelay="50" :closeDelay="200">
     <HoverCardTrigger>
       <WeatherTrigger />
     </HoverCardTrigger>
