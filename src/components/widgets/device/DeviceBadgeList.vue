@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-wrap gap-2.5">
-    <DeviceBadge v-for="badge in badges" :key="badge.name" :iconClass="badge.iconClass">
+    <DeviceBadge v-for="badge in badges" :key="badge.name" :iconClass="badge.iconClass ?? ''">
       <template #icon>
         <component :is="badge.icon" size="24px" class="text-brown-500" />
       </template>
@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { deviceInfo } from "@/lib/device-info";
-import { onMounted, ref } from "vue";
+import { onMounted, shallowRef } from "vue";
 
 import DeviceBadge from "./DeviceBadge.vue";
 
@@ -24,7 +24,7 @@ import {
   PlugZapIcon, // 適用於有線電源的情況
 } from "@lucide/vue";
 
-const badges = ref<any[]>([]);
+const badges = shallowRef<any[]>([]);
 
 onMounted(async () => {
   try {
