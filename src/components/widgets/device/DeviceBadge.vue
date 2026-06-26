@@ -2,7 +2,7 @@
   <TooltipProvider>
     <Tooltip>
       <TooltipTrigger>
-        <slot />
+        <slot :class="iconClass" />
       </TooltipTrigger>
       <TooltipContent>
         <slot name="content" />
@@ -13,4 +13,8 @@
 
 <script lang="ts" setup>
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+defineProps<{
+  iconClass: string;
+}>();
 </script>
