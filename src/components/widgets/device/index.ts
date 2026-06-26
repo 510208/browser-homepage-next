@@ -1,3 +1,4 @@
-import Device from "./Device.vue";
+import DeviceBadge from "./DeviceBadge.vue";
+import DeviceBadgeList from "./DeviceBadgeList.vue";
 
-export { Device };
+export { DeviceBadge, DeviceBadgeList };
