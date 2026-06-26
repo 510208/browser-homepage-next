@@ -1,7 +1,7 @@
 <template>
   <TooltipProvider>
     <Tooltip>
-      <TooltipTrigger>
+      <TooltipTrigger class="flex items-center justify-start gap-2.5 p-2.5 pb-0">
         <slot :class="iconClass" />
       </TooltipTrigger>
       <TooltipContent>
