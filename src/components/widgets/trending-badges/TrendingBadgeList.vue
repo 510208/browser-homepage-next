@@ -9,12 +9,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { shallowRef, onMounted } from "vue";
 import TrendingBadge from "./TrendingBadge.vue";
 import { GitHubIcon, YouTubeIcon, WakaTimeIcon } from "vue3-simple-icons";
 import { github, youtube, wakatime } from "@/lib/trending";
 
-const badges = ref<any[]>([]);
+const badges = shallowRef<any[]>([]);
 
 onMounted(async () => {
   try {
