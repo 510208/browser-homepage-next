@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { deviceInfo } from "@/lib/device-info";
-import { onMounted, shallowRef } from "vue";
+import { onMounted, onUnmounted, shallowRef } from "vue";
 
 import DeviceBadge from "./DeviceBadge.vue";
 
@@ -26,13 +26,13 @@ import {
   PlugZapIcon,
 } from "@lucide/vue";
 
-// 這裡維持原本的 shallowRef 即可
 const badges = shallowRef<any[]>([]);
+let timerId: ReturnType<typeof setInterval> | null = null;
 
-onMounted(async () => {
+const updateDeviceInfo = async () => {
   try {
     const deviceData = await deviceInfo.fetchDeviceInfo();
-    console.log("Device data:", deviceData);
+    console.log("Device data (updated):", deviceData);
 
     // CPU狀態
     const cpuUsage = deviceData.cpu.overall_usage_percent;
@@ -68,7 +68,6 @@ onMounted(async () => {
       {
         name: "CPU",
         icon: CpuIcon,
-        // 修正 4：給 CPU 一個預設的 iconClass，或者 template 會自動 fallback 到 'text-brown-500'
         iconClass: "text-brown-500",
         content: `${cpuUsage.toFixed(2)}%`,
       },
@@ -81,6 +80,19 @@ onMounted(async () => {
     ];
   } catch (error) {
     console.error("Failed to fetch device info:", error);
+  }
+};
+
+onMounted(async () => {
+  await updateDeviceInfo();
+
+  timerId = setInterval(updateDeviceInfo, 3000);
+});
+
+onUnmounted(() => {
+  if (timerId) {
+    clearInterval(timerId);
+    timerId = null;
   }
 });
 </script>
