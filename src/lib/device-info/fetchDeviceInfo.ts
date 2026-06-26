@@ -2,19 +2,20 @@ import type { DeviceDataResponse } from "@/types/deviceDataResponse";
 
 const LOCAL_SERVER_URL = "http://127.0.0.1:5000";
 
-function fetchDeviceInfo() {
+async function fetchDeviceInfo() {
   // 抓取裝置狀態
-  return fetch(`${LOCAL_SERVER_URL}/device-info`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json() as Promise<DeviceDataResponse>;
-    })
-    .catch((error) => {
-      console.error("Error fetching device info:", error);
-      throw error;
-    });
+  try {
+    const response = await fetch(`${LOCAL_SERVER_URL}/api/status`);
+    if (!response.ok) {
+      throw new Error("[fetchDeviceInfo] Network response was not ok");
+    }
+
+    console.log("[fetchDeviceInfo] Device info fetched successfully:", response);
+    return await (response.json() as Promise<DeviceDataResponse>);
+  } catch (error) {
+    console.error("[fetchDeviceInfo] Error fetching device info:", error);
+    throw error;
+  }
 }
 
 export { fetchDeviceInfo, LOCAL_SERVER_URL };
