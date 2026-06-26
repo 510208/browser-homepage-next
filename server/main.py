@@ -2,8 +2,10 @@ import platform
 import time
 from flask import Flask, jsonify, request
 import psutil
+from flask_cors import CORS  # 匯入 CORS 套件
 
 app = Flask(__name__)
+CORS(app)
 
 SERVER_START_TIME = time.time()
 
