@@ -42,7 +42,7 @@ import { Toaster } from "@/components/ui/sonner";
       class="absolute inset-0 bg-gradient-to-br from-[#FFFFFF] to-[#555555] mix-blend-soft-light"
     />
     <img
-      src="@assets/bg-images/background.png"
+      src="@assets/bg-images/background.webp"
       alt="Background"
       class="h-full w-full object-cover"
     />
