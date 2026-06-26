@@ -10,7 +10,7 @@
           "N/A"
         }}°C
       </h1>
-      <p class="text-base text-brown-200">
+      <p class="w-full text-base text-nowrap text-brown-200">
         {{
           getClosestValueFromMap(weatherStore.weatherData?.records[0]?.locations[0]?.weather) ||
           "N/A"
