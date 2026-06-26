@@ -1,0 +1,10 @@
+[project]
+name = "browser-homepage-server"
+version = "0.1.0"
+description = "The server for my custom browser homepage, it will provide essential api to show device info and control the device."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "flask>=3.1.3",
+    "psutil>=7.2.2",
+]
