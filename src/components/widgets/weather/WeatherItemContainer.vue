@@ -1,5 +1,12 @@
 <template>
-  <div :class="cn('relative overflow-hidden p-2.5', props.class)">
+  <div
+    :class="
+      cn(
+        'relative overflow-hidden rounded-xl p-2.5 transition-colors duration-300 hover:bg-brown-700',
+        props.class,
+      )
+    "
+  >
     <!-- 圖示 -->
     <div class="absolute right-0 -bottom-[13px] z-0">
       <slot name="icon" />
