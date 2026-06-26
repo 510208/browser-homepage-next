@@ -6,7 +6,7 @@ import { Avatar } from "@/components/widgets/avatar";
 import { Weather } from "@/components/widgets/weather";
 import Bookmarks from "@/components/widgets/bookmarks/Bookmarks.vue";
 import { TrendingBadgeList } from "@/components/widgets/trending-badges";
-import { Device } from "@/components/widgets/device";
+import { DeviceBadgeList } from "@/components/widgets/device";
 
 import { BottomCenter, RightTop, LeftTop, LeftBottom, RightBottom } from "@/components/container";
 
@@ -38,7 +38,7 @@ import { Toaster } from "@/components/ui/sonner";
     </LeftBottom>
 
     <RightBottom>
-      <Device />
+      <DeviceBadgeList />
     </RightBottom>
   </div>
 
