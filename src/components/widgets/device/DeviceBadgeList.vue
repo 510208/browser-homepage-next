@@ -48,13 +48,19 @@ const updateDeviceInfo = async () => {
       } else {
         const batteryLevel = deviceData.battery.percent;
         if (batteryLevel > 75) {
+          // >= 75%
+          batteryIconClass = "text-green-400";
           batteryIcon = BatteryFullIcon;
         } else if (batteryLevel > 40) {
+          // 75% - 40%
+          batteryIconClass = "text-yellow-400";
           batteryIcon = BatteryMediumIcon;
         } else if (batteryLevel > 10) {
-          batteryIconClass = "text-yellow-500";
+          // 40% - 10%
+          batteryIconClass = "text-yellow-400 animate-pulse";
           batteryIcon = BatteryLowIcon;
         } else {
+          // <= 10%
           batteryIconClass = "text-red-500 animate-pulse";
           batteryIcon = BatteryWarningIcon;
         }
