@@ -166,18 +166,3 @@ onUnmounted(() => {
   }
 });
 </script>
-
-<style scoped>
-#sh-weather-forecast-wrapper {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-}
-
-.sh-shadow-mask[data-show="false"] {
-  opacity: 0;
-}
-
-.sh-shadow-mask[data-show="true"] {
-  opacity: 1;
-}
-</style>
