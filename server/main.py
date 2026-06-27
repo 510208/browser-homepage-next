@@ -17,7 +17,7 @@ tui_instance = None
 
 # 掛載services、Flask與TUI的整合日誌處理器
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
+    level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(message)s"
 )
 logging.getLogger("werkzeug").setLevel(logging.INFO)
 
@@ -74,7 +74,8 @@ def get_hardware_status_fast():
         return jsonify(response_data), 200
 
     # 常規真實數據採集邏輯
-    cpu_per_cpu_percent = psutil.cpu_percent(interval=None, percpu=True)
+    cpu_per_cpu_percent = psutil.cpu_percent(interval=0.5, percpu=True)
+    logging.debug(f"CPU per-core usage percent: {cpu_per_cpu_percent}")
     logical_cores = psutil.cpu_count(logical=True) or 1
     physical_cores = psutil.cpu_count(logical=False) or 1
     virtual_mem = psutil.virtual_memory()
