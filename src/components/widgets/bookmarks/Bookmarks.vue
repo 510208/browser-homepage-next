@@ -9,7 +9,7 @@ import { cnUtils as cn } from "@/lib";
 import type { Bookmark } from "./types";
 import { Button } from "@/components/ui/button";
 
-import { onMounted } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import hotkeys from "hotkeys-js";
 
 const {
@@ -43,6 +43,10 @@ onMounted(() => {
   hotkeys("a", () => {
     openAddDialog();
   });
+});
+
+onUnmounted(() => {
+  hotkeys.unbind();
 });
 </script>
 
