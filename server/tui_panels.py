@@ -99,9 +99,9 @@ class MockControlApp(App):
                             )
                             yield Label(f"{int(MOCK_CONFIG['battery']['percent'])}%", id="lbl_bat_val", classes="value-lbl")
 
-            # 保持全域儲存按鈕，不論切換到哪一個分頁都可以直接儲存
-            yield Button("儲存並同步設定", variant="primary", id="btn_save")
-            yield Label("", id="status_lbl")
+        # 保持全域儲存按鈕，不論切換到哪一個分頁都可以直接儲存
+        yield Button("儲存並同步設定", variant="primary", id="btn_save")
+        yield Label("", id="status_lbl")
 
         yield Label("輸出內容:", classes="log-title")
         yield Log(id="flask_log", highlight=True)
