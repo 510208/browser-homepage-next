@@ -2,6 +2,7 @@
   <!-- Right Top Container -->
   <div
     class="absolute top-[30px] right-6 flex -translate-x-1/2 transform flex-col items-center gap-5"
+    id="sh-right-top-container"
   >
     <slot></slot>
   </div>
