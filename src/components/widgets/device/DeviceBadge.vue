@@ -2,7 +2,7 @@
   <TooltipProvider>
     <Tooltip>
       <TooltipTrigger class="flex items-center justify-start gap-2.5 p-2.5 pb-0">
-        <slot :class="iconClass" />
+        <slot :class="iconClass ? iconClass : ''" />
       </TooltipTrigger>
       <TooltipContent>
         <slot name="content" />
@@ -15,6 +15,6 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 defineProps<{
-  iconClass: string;
+  iconClass?: string;
 }>();
 </script>
