@@ -1,12 +1,10 @@
 import logging
-import platform
 import sys
 import threading
 import time
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import psutil
-import cpuinfo
 import service
 
 from config import MOCK_CONFIG, FlaskLogMessage
