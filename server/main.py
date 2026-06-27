@@ -6,6 +6,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import psutil
 import service
+import smtc
 
 from config import MOCK_CONFIG, FlaskLogMessage
 
@@ -155,6 +156,34 @@ def get_hardware_status_fast():
     }
 
     return jsonify(status), 200
+
+
+# region 控制本地音訊播放的API端點
+@flask_app.route("/api/media", methods=["GET"])
+def get_media_info():
+    media_info_json = smtc.get_media_info()
+    return media_info_json, 200
+
+
+@flask_app.route("/api/media/next", methods=["POST"])
+def play_next_track():
+    smtc.next_track()
+    return jsonify({"message": "Success to play next track"}), 200
+
+
+@flask_app.route("/api/media/previous", methods=["POST"])
+def play_previous_track():
+    smtc.previous_track()
+    return jsonify({"message": "Success to play previous track"}), 200
+
+
+@flask_app.route("/api/media/toggle", methods=["POST"])
+def toggle_play_pause():
+    smtc.toggle_play()
+    return jsonify({"message": "Success to toggle play/pause"}), 200
+
+
+# endregion
 
 
 def setup_unified_logging():
