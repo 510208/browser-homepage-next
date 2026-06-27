@@ -3,7 +3,7 @@
     <HoverCardTrigger>
       <slot :class="iconClass ? iconClass : ''" />
     </HoverCardTrigger>
-    <HoverCardContent>
+    <HoverCardContent class="w-[350px] overflow-hidden px-0 py-0" align="end">
       <slot name="content" />
     </HoverCardContent>
   </HoverCard>
