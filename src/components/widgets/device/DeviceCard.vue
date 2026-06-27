@@ -1,9 +1,9 @@
 <template>
-  <HoverCard>
+  <HoverCard open>
     <HoverCardTrigger>
       <slot :class="iconClass ? iconClass : ''" />
     </HoverCardTrigger>
-    <HoverCardContent class="w-[350px] overflow-hidden px-0 py-0" align="end">
+    <HoverCardContent class="w-[400px] overflow-hidden px-0 py-0" align="end">
       <slot name="content" />
     </HoverCardContent>
   </HoverCard>
