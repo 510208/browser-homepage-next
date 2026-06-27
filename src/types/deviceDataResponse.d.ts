@@ -69,13 +69,17 @@ interface DiskStatus {
 }
 
 /**
- * 網路介面累計流量統計
+ * 網路介面累計流量與連線狀態統計
  */
 interface NetworkStatus {
   /** 自系統啟動以來累計發送的資料量（位元組 Bytes） */
   bytes_sent: number;
   /** 自系統啟動以來累計接收的資料量（位元組 Bytes） */
   bytes_recv: number;
+  /** 網路連線類型，例如 "Wi-Fi"、"有線網路"、"沒有連線" */
+  type: "Wi-Fi" | "有線網路" | "沒有連線" | string;
+  /** 網路名稱，例如 Wi-Fi SSID 或實體網卡介面名稱（如 "en0", "eth0"） */
+  name: string;
 }
 
 /**
