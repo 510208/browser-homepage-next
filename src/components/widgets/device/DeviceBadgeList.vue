@@ -1,23 +1,16 @@
 <template>
   <div class="flex flex-wrap gap-2.5">
-    <DeviceBadge v-for="badge in badges" :icon-class="badge.iconClass" :key="badge.name">
-      <component :is="badge.icon" size="24px" :class="badge.iconClass ?? 'text-brown-500'" />
-
-      <template #content>
-        <span class="text-sm font-medium">{{ badge.content }}</span>
-      </template>
-    </DeviceBadge>
+    <BadgeCpu :cpu-usage="deviceData?.cpu?.overall_usage_percent" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { deviceInfo } from "@/lib/device-info";
-import { onMounted, onUnmounted, shallowRef } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
-import DeviceBadge from "./DeviceBadge.vue";
+import BadgeCpu from "./single-device/BadgeCpu.vue";
 
 import {
-  CpuIcon,
   BatteryFullIcon,
   BatteryMediumIcon,
   BatteryLowIcon,
@@ -25,28 +18,26 @@ import {
   BatteryChargingIcon,
   PlugZapIcon,
 } from "@lucide/vue";
+import type { DeviceDataResponse } from "@/types/deviceDataResponse";
 
-const badges = shallowRef<any[]>([]);
+const deviceData = ref<DeviceDataResponse>();
 let timerId: ReturnType<typeof setInterval> | null = null;
 
 const updateDeviceInfo = async () => {
   try {
-    const deviceData = await deviceInfo.fetchDeviceInfo();
-    console.log("Device data (updated):", deviceData);
-
-    // CPU狀態
-    const cpuUsage = deviceData.cpu.overall_usage_percent;
+    deviceData.value = await deviceInfo.fetchDeviceInfo();
+    console.log("Device data (updated):", deviceData.value);
 
     // 電池狀態
     let batteryIcon, batteryContent, batteryIconClass;
-    if (deviceData.battery) {
-      batteryContent = `${deviceData.battery.percent}%`;
+    if (deviceData.value.battery) {
+      batteryContent = `${deviceData.value.battery.percent}%`;
       batteryIconClass = "text-brown-500";
 
-      if (deviceData.battery.power_plugged) {
+      if (deviceData.value.battery.power_plugged) {
         batteryIcon = BatteryChargingIcon;
       } else {
-        const batteryLevel = deviceData.battery.percent;
+        const batteryLevel = deviceData.value.battery.percent;
         if (batteryLevel > 75) {
           // >= 75%
           batteryIconClass = "text-green-400";
@@ -69,21 +60,6 @@ const updateDeviceInfo = async () => {
       batteryContent = "裝置沒有電池";
       batteryIcon = PlugZapIcon;
     }
-
-    badges.value = [
-      {
-        name: "CPU",
-        icon: CpuIcon,
-        iconClass: "text-brown-500",
-        content: `${cpuUsage.toFixed(2)}%`,
-      },
-      {
-        name: "Battery",
-        icon: batteryIcon,
-        iconClass: batteryIconClass,
-        content: batteryContent,
-      },
-    ];
   } catch (error) {
     console.error("Failed to fetch device info:", error);
   }
