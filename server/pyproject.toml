@@ -13,4 +13,7 @@ dependencies = [
     "setuptools>=82.0.1",
     "textual>=8.2.7",
     "textual-slider>=0.2.0",
+    "winrt-windows-foundation>=3.2.1",
+    "winrt-windows-media-control>=3.2.1",
+    "winrt-windows-storage-streams>=3.2.1",
 ]
