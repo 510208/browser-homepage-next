@@ -9,7 +9,7 @@
 
   <!-- 搜尋對話框（由按鈕控制） -->
   <Dialog v-model:open="isOpen">
-    <DialogContent as-child class="h-auto w-[400px] gap-0 p-0">
+    <DialogContent as-child class="h-auto w-[400px] gap-0 p-0" aria-describedby="undefined">
       <SearchPanel />
     </DialogContent>
   </Dialog>
