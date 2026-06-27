@@ -1,0 +1,57 @@
+Screen {
+    align: center top;
+    padding: 0 1;
+}
+.frame {
+    border: round green;
+    padding: 0 1;
+    margin: 0;
+    height: 25;
+}
+.field {
+    margin: 1 0 0 0;
+    color: $accent;
+}
+.slider-row {
+    height: 3;
+    align: right middle;
+}
+Slider {
+    width: 85%;
+    height: 3;
+    margin: 0;
+}
+.value-lbl {
+    width: 15%;
+    margin: 1 0 0 1;
+    text-align: right;
+    color: $accent;
+}
+Checkbox {
+    margin: 0 0 1 0;
+}
+Input {
+    height: 1;
+    border: none;
+    background: $surface;
+    margin: 0 0 1 0;
+    padding: 0 1;
+}
+Button {
+    margin: 1 0 0 0;
+    width: 100%;
+}
+#status_lbl {
+    text-align: center;
+    color: yellow;
+    margin: 0;
+    height: 1;
+}
+.log-title {
+    margin: 1 0 0 0;
+}
+#flask_log {
+    border: round blue;
+    height: 10;
+    background: $background;
+}
