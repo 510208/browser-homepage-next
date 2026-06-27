@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-wrap gap-2.5">
     <BadgeCpu :cpu-data="deviceData?.cpu" />
+    <BadgeBattery :battery-data="deviceData?.battery" />
   </div>
 </template>
 
@@ -9,6 +10,7 @@ import { deviceInfo } from "@/lib/device-info";
 import { onMounted, onUnmounted, ref } from "vue";
 
 import BadgeCpu from "./single-device/BadgeCpu.vue";
+import BadgeBattery from "./single-device/BadgeBattery.vue";
 
 import {
   BatteryFullIcon,
