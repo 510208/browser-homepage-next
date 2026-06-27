@@ -32,6 +32,9 @@ importers:
       fast-xml-parser:
         specifier: ^5.9.3
         version: 5.9.3
+      hotkeys-js:
+        specifier: ^4.0.4
+        version: 4.0.4
       octokit:
         specifier: ^5.0.5
         version: 5.0.5
@@ -837,6 +840,9 @@ packages:
 
   hookable@5.5.3:
     resolution: {integrity: sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==}
+
+  hotkeys-js@4.0.4:
+    resolution: {integrity: sha512-hseNiqaskxSnujuGp8aRMLJfcjaFiTSS0I2GQhqru82N/sx6CGyUf6pvU5X1iycvw2EqmvILkFIb5OzYFXY+9A==}
 
   is-docker@3.0.0:
     resolution: {integrity: sha512-eljcgEDlEns/7AXFosB5K/2nCM4P7FQPkGc/DWLy5rmFEWvZayGrik1d9/QIY5nJ4f9YsVvBkA6kJpHn9rISdQ==}
@@ -1900,6 +1906,8 @@ snapshots:
   graceful-fs@4.2.11: {}
 
   hookable@5.5.3: {}
+
+  hotkeys-js@4.0.4: {}
 
   is-docker@3.0.0: {}
 
