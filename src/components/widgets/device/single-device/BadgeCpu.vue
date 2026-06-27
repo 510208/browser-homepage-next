@@ -23,7 +23,7 @@
 
         <div
           v-if="cpuData?.per_core_usage_percent && cpuData.per_core_usage_percent.length > 0"
-          class="max-h-48 overflow-y-auto px-5 py-2.5"
+          class="max-h-48 overflow-y-auto px-5 pt-2.5 pb-5"
         >
           <span class="mb-1.5 block text-base font-medium text-gray-400">核心負載狀態</span>
           <div class="grid grid-cols-2 gap-x-3 gap-y-1.5">
