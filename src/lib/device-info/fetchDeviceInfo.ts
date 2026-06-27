@@ -10,7 +10,7 @@ async function fetchDeviceInfo(): Promise<DeviceDataResponse> {
       throw new Error("[fetchDeviceInfo] Network response was not ok");
     }
 
-    console.log("[fetchDeviceInfo] Device info fetched successfully:", response);
+    // console.log("[fetchDeviceInfo] Device info fetched successfully:", response);
     return await (response.json() as Promise<DeviceDataResponse>);
   } catch (error) {
     console.error("[fetchDeviceInfo] Error fetching device info:", error);
