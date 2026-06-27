@@ -32,13 +32,13 @@
         <div class="bg-brown-700 px-5 py-6">
           <div class="flex flex-col items-start gap-2.5">
             <h2 class="text-3xl font-bold text-white">
-              {{ networkData?.type || "沒有連線" }}
+              {{ networkName }}
             </h2>
             <div class="flex flex-col gap-0.5">
               <p
                 class="text-overflow-ellipsis overflow-hidden text-lg whitespace-nowrap text-brown-400"
               >
-                {{ networkName }}
+                {{ networkData?.type || "沒有連線" }}
               </p>
             </div>
           </div>
