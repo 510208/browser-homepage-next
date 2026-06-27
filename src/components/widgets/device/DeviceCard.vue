@@ -1,5 +1,5 @@
 <template>
-  <HoverCard open>
+  <HoverCard>
     <HoverCardTrigger>
       <slot :class="iconClass ? iconClass : ''" />
     </HoverCardTrigger>
