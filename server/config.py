@@ -1,3 +1,5 @@
+from textual.message import Message
+
 MOCK_CONFIG = {
     "enable_mock": False,
     "system": {
@@ -35,6 +37,8 @@ MOCK_CONFIG = {
     "network": {
         "bytes_sent": 12547896,
         "bytes_recv": 98745231,
+        "type": "Wi-Fi",  # 新增：可填寫 Wi-Fi、有線網路、沒有連線
+        "name": "Home_Network",  # 新增：可填寫 SSID 或網卡名稱
     },
     "battery": {
         "percent": 85,
@@ -43,10 +47,10 @@ MOCK_CONFIG = {
     "battery_is_null": False,
 }
 
-from textual.message import Message
 
 class FlaskLogMessage(Message):
     """自訂 Textual 訊息類別，用於執行緒安全地傳遞日誌文字"""
+
     def __init__(self, log_line: str) -> None:
         super().__init__()
         self.log_line = log_line

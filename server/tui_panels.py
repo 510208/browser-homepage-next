@@ -9,6 +9,7 @@ from textual.widgets import (
     Label,
     Log,
     Input,
+    Select,
     TabPane,
     TabbedContent,
 )
@@ -141,6 +142,22 @@ class MockControlApp(App):
                             )
 
                         yield Label("網路數據控制", classes="field")
+                        yield Label("網路連線類型:")
+                        yield Select(
+                            options=[
+                                ("Wi-Fi", "Wi-Fi"),
+                                ("有線網路", "有線網路"),
+                                ("沒有連線", "沒有連線"),
+                            ],
+                            value=str(MOCK_CONFIG["network"]["type"]),
+                            id="inp_net_type",
+                            allow_blank=False,
+                        )
+                        yield Label("網路名稱 (SSID/介面名稱):")
+                        yield Input(
+                            value=str(MOCK_CONFIG["network"]["name"]), id="inp_net_name"
+                        )
+
                         yield Label("傳送位元組 (Bytes Sent):")
                         yield Input(
                             value=str(MOCK_CONFIG["network"]["bytes_sent"]),
@@ -208,7 +225,7 @@ class MockControlApp(App):
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn_save":
-            # 寫回模擬開關狀態
+            # region 寫回模擬開關狀態
             MOCK_CONFIG["enable_mock"] = self.query_one("#chk_mock", Checkbox).value
             MOCK_CONFIG["battery_is_null"] = self.query_one(
                 "#chk_battery_null", Checkbox
@@ -216,8 +233,9 @@ class MockControlApp(App):
             MOCK_CONFIG["battery"]["power_plugged"] = self.query_one(
                 "#chk_battery_plugged", Checkbox
             ).value
+            # endregion
 
-            # 寫回系統基本資訊
+            # region 寫回系統基本資訊
             MOCK_CONFIG["system"]["os"] = self.query_one("#inp_os", Input).value
             MOCK_CONFIG["system"]["os_release"] = self.query_one(
                 "#inp_release", Input
@@ -225,8 +243,9 @@ class MockControlApp(App):
             MOCK_CONFIG["system"]["architecture"] = self.query_one(
                 "#inp_arch", Input
             ).value
+            # endregion
 
-            # 寫回 CPU 資訊
+            # region 寫回 CPU 資訊
             MOCK_CONFIG["cpu"]["model"] = self.query_one("#inp_cpu_model", Input).value
 
             total_cores = 1
@@ -249,21 +268,35 @@ class MockControlApp(App):
                 core_val = max(0.0, min(100.0, round(core_val, 1)))
                 per_core_list.append(core_val)
             MOCK_CONFIG["cpu"]["per_core_usage_percent"] = per_core_list
+            # endregion
 
-            # 寫回記憶體百分比
+            # region 寫回記憶體百分比
             MOCK_CONFIG["memory"]["ram"]["usage_percent"] = float(
                 self.query_one("#sld_ram", Slider).value
             )
             MOCK_CONFIG["memory"]["swap"]["usage_percent"] = float(
                 self.query_one("#sld_swap", Slider).value
             )
+            # endregion
 
-            # 寫回磁碟百分比
+            # region 寫回磁碟百分比
             MOCK_CONFIG["disk"]["usage_percent"] = float(
                 self.query_one("#sld_disk", Slider).value
             )
+            # endregion
 
-            # 寫回網路流量
+            # region 寫回網路類型與名稱
+            net_type_val = self.query_one("#inp_net_type", Select).value
+            MOCK_CONFIG["network"]["type"] = (
+                str(net_type_val) if net_type_val is not Select.BLANK else "沒有連線"
+            )
+
+            MOCK_CONFIG["network"]["name"] = self.query_one(
+                "#inp_net_name", Input
+            ).value
+            # endregion
+
+            # region 寫回網路流量 (原本的程式碼)
             try:
                 MOCK_CONFIG["network"]["bytes_sent"] = int(
                     self.query_one("#inp_net_sent", Input).value
@@ -273,11 +306,13 @@ class MockControlApp(App):
                 )
             except ValueError:
                 pass
+            # endregion
 
-            # 寫回電池狀態
+            # region 寫回電池狀態
             MOCK_CONFIG["battery"]["percent"] = int(
                 self.query_one("#sld_bat", Slider).value
             )
+            # endregion
 
             lbl = self.query_one("#status_lbl", Label)
             lbl.update(" [全量配置結構已成功同步至記憶體快取] ")
