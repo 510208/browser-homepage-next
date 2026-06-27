@@ -51,9 +51,11 @@ import { Progress } from "@/components/ui/progress";
 import { computed } from "vue";
 
 const cpuIconClass = computed(() => {
+  const baseClass = "transition-colors duration-500";
+
   // 若無資料則預設回傳基礎品牌色
   if (cpuData?.overall_usage_percent === undefined) {
-    return "text-brown-500 transition-color duration-500";
+    return `${baseClass} text-brown-500`;
   }
 
   const cpuUsage = cpuData.overall_usage_percent;
@@ -61,19 +63,19 @@ const cpuIconClass = computed(() => {
   // 沿用與電池相同的級距與動畫邏輯
   if (cpuUsage > 90) {
     // 負載 > 90%：高負載危險狀態
-    return "text-red-500 animate-pulse transition-color duration-500";
+    return `${baseClass} text-red-500 animate-pulse`;
   } else if (cpuUsage > 80) {
     // 負載 90% - 80%：中高負載警告狀態
-    return "text-red-500 transition-color duration-500";
+    return `${baseClass} text-red-500`;
   } else if (cpuUsage > 60) {
     // 負載 80% - 60%：中高負載警告狀態
-    return "text-yellow-400 transition-color duration-500";
+    return `${baseClass} text-yellow-400`;
   } else if (cpuUsage > 30) {
     // 負載 60% - 30%：一般負載狀態
-    return "text-yellow-400 transition-color duration-500";
+    return `${baseClass} text-yellow-400`;
   } else {
     // 負載 <= 30%：低負載安全狀態，使用自定義品牌色
-    return "text-green-500 transition-color duration-500";
+    return `${baseClass} text-green-500`;
   }
 });
 
