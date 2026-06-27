@@ -5,7 +5,6 @@ import threading
 import time
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from textual.message import Message
 import psutil
 
 from config import MOCK_CONFIG, FlaskLogMessage
@@ -16,15 +15,27 @@ CORS(flask_app)
 SERVER_START_TIME = time.time()
 tui_instance = None
 
+# 掛載services、Flask與TUI的整合日誌處理器
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
+)
+logging.getLogger("werkzeug").setLevel(logging.INFO)
+
 psutil.cpu_percent(interval=None, percpu=True)
+
+
 class ColoredTuiLogHandler(logging.Handler):
     """自訂日誌處理器，透過 post_message 將日誌非同步投遞給主事件迴圈"""
+
     def emit(self, record):
         log_entry = self.format(record)
         if tui_instance is not None:
             tui_instance.post_message(FlaskLogMessage(log_entry))
+
+
 class TuiAnsiFormatter(logging.Formatter):
     """自訂格式化工具，為不同的日誌層級加上 ANSI 顏色代碼"""
+
     COLOR_PREFIX = {
         logging.DEBUG: "\033[36m[DEBUG]\033[0m",
         logging.INFO: "\033[32m[INFO ]\033[0m",
@@ -49,14 +60,14 @@ def get_hardware_status_fast():
     if MOCK_CONFIG["enable_mock"]:
         # 實時更新模擬數據中的運作時間
         MOCK_CONFIG["system"]["uptime_seconds"] = int(time.time() - SERVER_START_TIME)
-        
+
         # 處理電池可能為 null 的狀況
         response_data = dict(MOCK_CONFIG)
         if MOCK_CONFIG["battery_is_null"]:
             response_data["battery"] = None
         else:
             response_data["battery"] = MOCK_CONFIG["battery"]
-            
+
         # 移除內部控制用的非標準欄位再行回傳
         response_data.pop("enable_mock", None)
         response_data.pop("battery_is_null", None)
@@ -83,8 +94,12 @@ def get_hardware_status_fast():
             "model": platform.processor(),
             "physical_cores": physical_cores,
             "total_cores": logical_cores,
-            "overall_usage_percent": sum(cpu_per_cpu_percent) / len(cpu_per_cpu_percent) if cpu_per_cpu_percent else 0,
-            "per_core_usage_percent": cpu_per_cpu_percent if cpu_per_cpu_percent else [0] * logical_cores,
+            "overall_usage_percent": sum(cpu_per_cpu_percent) / len(cpu_per_cpu_percent)
+            if cpu_per_cpu_percent
+            else 0,
+            "per_core_usage_percent": cpu_per_cpu_percent
+            if cpu_per_cpu_percent
+            else [0] * logical_cores,
         },
         "memory": {
             "ram": {
@@ -113,7 +128,9 @@ def get_hardware_status_fast():
         "battery": {
             "percent": battery.percent,
             "power_plugged": battery.power_plugged,
-        } if battery is not None else None
+        }
+        if battery is not None
+        else None,
     }
 
     return jsonify(status), 200
@@ -146,7 +163,7 @@ if __name__ == "__main__":
 
     # 輸出歡迎訊息
     print(
-r"""
+        r"""
  /$$$$$$$                                                                        /$$   /$$                                                                          
 | $$__  $$                                                                      | $$  | $$                                                                          
 | $$  \ $$  /$$$$$$   /$$$$$$  /$$  /$$  /$$  /$$$$$$$  /$$$$$$   /$$$$$$       | $$  | $$  /$$$$$$  /$$$$$$/$$$$   /$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$ 
@@ -167,11 +184,13 @@ r"""
 |  $$$$$$/|  $$$$$$$| $$         \  $/  |  $$$$$$$| $$                                                                                                              
  \______/  \_______/|__/          \_/    \_______/|__/                                                                                                              
                                                                                                                                                                     
-""")
+"""
+    )
     logging.info("啟動伺服器中...")
 
     if is_dev_mode:
         from tui_panels import MockControlApp
+
         tui_app = MockControlApp()
         tui_instance = tui_app
         flask_thread = threading.Thread(target=run_flask, daemon=True)
