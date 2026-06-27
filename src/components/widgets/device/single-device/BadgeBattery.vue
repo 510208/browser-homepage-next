@@ -1,24 +1,69 @@
 <template>
   <DeviceBadge>
-    <component :is="batteryIcon" :class="batteryIconClass" :size="24" />
+    <div class="relative h-6 w-6">
+      <!-- BatteryFullIcon -->
+      <BatteryFullIcon
+        :style="iconStyle"
+        :class="[
+          'absolute top-0 left-0 transition-all duration-500',
+          currentActiveIcon === 'Full' ? 'opacity-100' : 'opacity-0',
+        ]"
+        :size="24"
+      />
+
+      <!-- BatteryMediumIcon -->
+      <BatteryMediumIcon
+        :style="iconStyle"
+        :class="[
+          'absolute top-0 left-0 transition-all duration-500',
+          currentActiveIcon === 'Medium' ? 'opacity-100' : 'opacity-0',
+        ]"
+        :size="24"
+      />
+
+      <!-- BatteryLowIcon -->
+      <BatteryLowIcon
+        :style="iconStyle"
+        :class="[
+          'absolute top-0 left-0 transition-all duration-500',
+          currentActiveIcon === 'Low' ? 'animate-pulse opacity-100' : 'opacity-0',
+        ]"
+        :size="24"
+      />
+
+      <!-- BatteryWarningIcon -->
+      <BatteryWarningIcon
+        :style="iconStyle"
+        :class="[
+          'absolute top-0 left-0 transition-all duration-500',
+          currentActiveIcon === 'Warning' ? 'animate-pulse opacity-100' : 'opacity-0',
+        ]"
+        :size="24"
+      />
+
+      <!-- BatteryChargingIcon -->
+      <BatteryChargingIcon
+        :style="iconStyle"
+        :class="[
+          'absolute top-0 left-0 transition-all duration-500',
+          currentActiveIcon === 'Charging' ? 'animate-pulse opacity-100' : 'opacity-0',
+        ]"
+        :size="24"
+      />
+
+      <!-- PlugZapIcon -->
+      <PlugZapIcon
+        :style="iconStyle"
+        :class="[
+          'absolute top-0 left-0 transition-all duration-500',
+          currentActiveIcon === 'NoBattery' ? 'opacity-100' : 'opacity-0',
+        ]"
+        :size="24"
+      />
+    </div>
 
     <template #content>
-      <div class="relative flex flex-col gap-0">
-        <div class="bg-brown-700 px-5 py-6">
-          <div class="flex flex-col items-start gap-2.5">
-            <h2 class="text-3xl font-bold text-white">
-              {{ batteryData ? `${batteryData.percent}%` : "N/A" }}
-            </h2>
-            <div class="flex flex-col gap-0.5">
-              <p
-                class="text-overflow-ellipsis overflow-hidden text-lg whitespace-nowrap text-brown-400"
-              >
-                {{ batteryStatusText }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      {{ batteryStatusText }}{{ batteryData ? `，${batteryData.percent}%` : "" }}
     </template>
   </DeviceBadge>
 </template>
@@ -36,62 +81,92 @@ import {
   PlugZapIcon,
 } from "@lucide/vue";
 
+// 定義色碼常數
+const COLORS = {
+  text_green_400: "#4ade80",
+  text_yellow_400: "#facc15",
+  text_red_500: "#ef4444",
+  text_brown_500: "#8b5a2b",
+  text_gray_400: "#9ca3af",
+};
+
 // 定義元件的 Props 屬性
 const { batteryData } = defineProps<{
-  batteryData: BatteryStatus | undefined;
+  batteryData: BatteryStatus | null | undefined;
 }>();
 
 // 動態判斷電池狀態文字描述
 const batteryStatusText = computed(() => {
-  if (!batteryData) {
+  if (!batteryData || batteryData.percent === undefined) {
     return "裝置沒有電池";
   }
   return batteryData.power_plugged ? "外部電源已連接 (充電中)" : "正在使用電池供電";
 });
 
-// 動態計算電池圖示元件
-const batteryIcon = computed(() => {
-  if (!batteryData) {
-    return PlugZapIcon;
+// 計算當前應該顯示的圖示標籤名稱
+const currentActiveIcon = computed(() => {
+  if (!batteryData || batteryData.percent === undefined) {
+    return "NoBattery";
   }
 
   if (batteryData.power_plugged) {
-    return BatteryChargingIcon;
+    return "Charging";
   }
 
   const batteryLevel = batteryData.percent;
   if (batteryLevel > 75) {
-    return BatteryFullIcon;
+    return "Full";
   } else if (batteryLevel > 40) {
-    return BatteryMediumIcon;
+    return "Medium";
   } else if (batteryLevel > 10) {
-    return BatteryLowIcon;
+    return "Low";
   } else {
-    return BatteryWarningIcon;
+    return "Warning";
   }
 });
 
-// 動態計算電池圖示顏色樣式類別
-const batteryIconClass = computed(() => {
-  const baseClass = "transition-colors duration-500";
-
-  if (!batteryData) {
-    return `${baseClass} text-gray-400`;
+// 計算當前的顏色，提供給 CSS 變數做 v-bind 綁定
+const currentIconColor = computed(() => {
+  if (!batteryData || batteryData.percent === undefined) {
+    // 無電池資料，對應原本的 text-gray-400 十六進位值
+    return COLORS.text_gray_400;
   }
 
   if (batteryData.power_plugged) {
-    return `${baseClass} text-brown-500`;
+    // 充電中，對應您自定義的 brown-500 十六進位值（此處以範例色值代入，可依專案實際變數修改）
+    return COLORS.text_brown_500;
   }
 
   const batteryLevel = batteryData.percent;
   if (batteryLevel > 75) {
-    return `${baseClass} text-green-400`;
+    // 對應 text-green-400
+    return COLORS.text_green_400;
   } else if (batteryLevel > 40) {
-    return `${baseClass} text-yellow-400`;
+    // 對應 text-yellow-400
+    return COLORS.text_yellow_400;
   } else if (batteryLevel > 10) {
-    return `${baseClass} text-yellow-400 animate-pulse`;
+    // 對應 text-yellow-400
+    return COLORS.text_yellow_400;
   } else {
-    return `${baseClass} text-red-500 animate-pulse`;
+    // 對應 text-red-500
+    return COLORS.text_red_500;
   }
+});
+
+// 封裝 Style 屬性，確保過渡動畫包含 color 與 opacity
+const iconStyle = computed(() => {
+  return {
+    color: currentIconColor.value,
+  };
 });
 </script>
+
+<style scoped>
+/* 使用 style 標籤配合 v-bind 綁定動態顏色，並定義平滑過渡效果 */
+.transition-all {
+  color: v-bind(currentIconColor);
+  transition:
+    opacity 500ms ease-in-out,
+    color 500ms ease-in-out;
+}
+</style>
