@@ -12,8 +12,9 @@
 </style>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { fetchQuote } from "@/lib/fetchQuote";
+import hotkeys from "hotkeys-js";
 
 const quote = ref("載入中...");
 
@@ -28,6 +29,14 @@ onMounted(async () => {
   if (quoteElement) {
     quoteElement.addEventListener("click", refreshQuote);
   }
+
+  hotkeys("q", () => {
+    refreshQuote();
+  });
+});
+
+onUnmounted(() => {
+  hotkeys.unbind();
 });
 
 // 點擊文本刷新
