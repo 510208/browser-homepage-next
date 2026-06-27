@@ -120,12 +120,13 @@ const resetIdleTimer = () => {
 
   idleTimer = setTimeout(() => {
     animateWidgetsHide();
-  }, 2000);
+  }, 5000);
 };
 
 // 元件掛載時註冊全域滑鼠移動監聽事件並初始化計時器
 onMounted(() => {
   window.addEventListener("mousemove", resetIdleTimer);
+  window.addEventListener("keydown", resetIdleTimer);
 
   // 由於改用 ID 選擇器，同樣建議在下一幀渲染時再進行首次初始化，確保 DOM 已存在於頁面上
   requestAnimationFrame(() => {
