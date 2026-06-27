@@ -9,6 +9,9 @@ import { cnUtils as cn } from "@/lib";
 import type { Bookmark } from "./types";
 import { Button } from "@/components/ui/button";
 
+import { onMounted } from "vue";
+import hotkeys from "hotkeys-js";
+
 const {
   bookmarks,
   dialogState,
@@ -27,6 +30,20 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: "update:bookmarks", bookmarks: Bookmark[]): void;
 }>();
+
+// 掛載時建立對數字鍵與加號鍵的監聽，數字鍵對應到書籤的索引位置，按下加號鍵則打開新增書籤對話框
+onMounted(() => {
+  bookmarks.value.forEach((bookmark, index) => {
+    hotkeys(`${index + 1}`, () => {
+      // 開啟該書籤對應的網址
+      window.open(bookmark.url, "_blank");
+    });
+  });
+
+  hotkeys("a", () => {
+    openAddDialog();
+  });
+});
 </script>
 
 <template>
