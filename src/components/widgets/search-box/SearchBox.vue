@@ -1,22 +1,41 @@
 <template>
-  <Input
-    placeholder="今天要找些什麼呢"
-    v-model="searchQuery"
-    @keyup.enter="doSearch"
-    class="px-auto h-11 max-h-none w-full max-w-[300px] border-none bg-white/20 py-2.5 text-center text-base! font-light placeholder:text-base placeholder:font-light"
-  />
+  <Button
+    class="px-auto h-11 max-h-none w-[300px] border-none bg-white/20 py-2.5 text-center text-base font-light text-white/80 hover:bg-white/30"
+    @click="isOpen = true"
+  >
+    <SearchIcon :size="24" class="size-6 text-brown-500" />
+    今天要搜些什麼？
+  </Button>
+
+  <!-- 搜尋對話框（由按鈕控制） -->
+  <Dialog v-model:open="isOpen">
+    <DialogContent as-child class="h-auto w-[400px] gap-0 p-0">
+      <SearchPanel />
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
-import { Input } from "@/components/ui/input";
-import { ref } from "vue";
+import { Button } from "@/components/ui/button";
+import { SearchIcon } from "@lucide/vue";
+import { ref, onMounted, onUnmounted } from "vue";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import SearchPanel from "./SearchPanel.vue";
 
-const searchQuery = ref("");
+const isOpen = ref(false);
 
-function doSearch() {
-  if (searchQuery.value.trim() !== "") {
-    const query = encodeURIComponent(searchQuery.value.trim());
-    window.open(`https://www.google.com/search?q=${query}`, "_blank");
+// 除了w、數字1~9、a鍵以外的任何鍵被按下，就開啟搜尋對話框
+function handleKeyDown(event: KeyboardEvent) {
+  if (!isOpen.value && event.key !== "w" && event.key !== "a" && !/^[1-9]$/.test(event.key)) {
+    isOpen.value = !isOpen.value;
   }
 }
+
+onMounted(() => {
+  document.addEventListener("keydown", handleKeyDown);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("keydown", handleKeyDown);
+});
 </script>
