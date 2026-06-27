@@ -2,7 +2,7 @@ import type { DeviceDataResponse } from "@/types/deviceDataResponse";
 
 const LOCAL_SERVER_URL = "http://127.0.0.1:5000";
 
-async function fetchDeviceInfo() {
+async function fetchDeviceInfo(): Promise<DeviceDataResponse> {
   // 抓取裝置狀態
   try {
     const response = await fetch(`${LOCAL_SERVER_URL}/api/status`);
