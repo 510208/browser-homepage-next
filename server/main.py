@@ -6,6 +6,7 @@ import time
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import psutil
+import cpuinfo
 
 from config import MOCK_CONFIG, FlaskLogMessage
 
@@ -92,7 +93,7 @@ def get_hardware_status_fast():
             "uptime_seconds": int(time.time() - SERVER_START_TIME),
         },
         "cpu": {
-            "model": platform.processor(),
+            "model": cpuinfo.get_cpu_info().get("brand_raw", "Unknown CPU"),
             "physical_cores": physical_cores,
             "total_cores": logical_cores,
             "overall_usage_percent": sum(cpu_per_cpu_percent) / len(cpu_per_cpu_percent)
