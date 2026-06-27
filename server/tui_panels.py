@@ -103,7 +103,7 @@ class MockControlApp(App):
             yield Button("儲存並同步設定", variant="primary", id="btn_save")
             yield Label("", id="status_lbl")
 
-        yield Label("系統全域彩色日誌主控台:", classes="log-title")
+        yield Label("輸出內容:", classes="log-title")
         yield Log(id="flask_log", highlight=True)
 
     def on_slider_changed(self, event: Slider.Changed) -> None:
