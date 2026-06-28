@@ -154,7 +154,6 @@ def setup_unified_logging():
 
 def run_flask():
     setup_unified_logging()
-    logging.info("Flask 核心服務已全面切換至結構化配置架構...")
     flask_app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)
 
 
@@ -196,17 +195,6 @@ def set_console_taskbar_visible(visible):
         ctypes.windll.user32.ShowWindow(hwnd, 0)
 
 
-def toggle_console():
-    # 供工作列選單點擊切換顯示/隱藏終端機狀態
-    global is_console_visible
-    if is_console_visible:
-        set_console_taskbar_visible(False)
-        is_console_visible = False
-    else:
-        set_console_taskbar_visible(True)
-        is_console_visible = True
-
-
 def setup_tray_icon(app_instance):
     # 建立系統工作列圖示與右鍵選單
     global tray_icon_instance
@@ -216,10 +204,6 @@ def setup_tray_icon(app_instance):
     tray_icon_instance.setIcon(QIcon(get_asset_path("icon.png")))
 
     menu = QMenu()
-
-    toggle_action = QAction("顯示/隱藏終端機", menu)
-    toggle_action.triggered.connect(toggle_console)
-    menu.addAction(toggle_action)
 
     exit_action = QAction("退出程式", menu)
     exit_action.triggered.connect(QApplication.quit)
@@ -272,11 +256,6 @@ def main(is_dev_mode, is_silent_mode, port):
     # 設定工作列圖示（一律建立，確保功能可用）
     _tray = setup_tray_icon(qt_app)
 
-    # 處理靜默模式下的視窗完全隱藏
-    if is_silent_mode:
-        set_console_taskbar_visible(False)
-        is_console_visible = False
-
     # 啟動 Flask 背景執行緒
     flask_thread = threading.Thread(
         target=start_flask_server, args=(port,), daemon=True
@@ -305,7 +284,9 @@ def main(is_dev_mode, is_silent_mode, port):
 
 
 if __name__ == "__main__":
-    sys.stdout.reconfigure(line_buffering=True)  # type: ignore
+    # 檢查標準輸出是否存在，避免在隱藏主控台時因 sys.stdout 為 None 導致崩潰
+    if sys.stdout is not None:
+        sys.stdout.reconfigure(line_buffering=True)  # type: ignore
 
     try:
         main()
