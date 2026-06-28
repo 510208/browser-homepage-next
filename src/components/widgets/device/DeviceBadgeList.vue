@@ -23,7 +23,7 @@ let timerId: ReturnType<typeof setInterval> | null = null;
 const updateDeviceInfo = async () => {
   try {
     deviceData.value = await deviceInfo.fetchDeviceInfo();
-    console.log("Device data (updated):", deviceData.value);
+    // console.log("Device data (updated):", deviceData.value);
   } catch (error) {
     console.error("Failed to fetch device info:", error);
     throw error;
