@@ -9,7 +9,7 @@
 
   <!-- 搜尋對話框（由按鈕控制） -->
   <Dialog v-model:open="isOpen">
-    <DialogContent as-child class="h-auto w-[400px] gap-0 p-0" aria-describedby="undefined">
+    <DialogContent as-child class="h-auto w-[400px] gap-0 p-0">
       <SearchPanel />
     </DialogContent>
   </Dialog>
@@ -24,9 +24,24 @@ import SearchPanel from "./SearchPanel.vue";
 
 const isOpen = ref(false);
 
-// 除了w、數字1~9、a鍵以外的任何鍵被按下，就開啟搜尋對話框
 function handleKeyDown(event: KeyboardEvent) {
-  if (!isOpen.value && event.key !== "w" && event.key !== "a" && !/^[1-9]$/.test(event.key)) {
+  const KEY_BLACKLIST = [
+    "w",
+    "a",
+    "Escape",
+    "Enter",
+    "Tab",
+    "Shift",
+    "Control",
+    "Alt",
+    "Meta",
+    "CapsLock",
+    "ArrowUp",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight",
+  ];
+  if (!isOpen.value && !KEY_BLACKLIST.includes(event.key) && !/^[1-9]$/.test(event.key)) {
     isOpen.value = !isOpen.value;
   }
 }
