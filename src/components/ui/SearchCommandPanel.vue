@@ -16,15 +16,15 @@
       />
     </div>
 
-    <div class="max-h-[300px] overflow-y-auto p-2">
+    <div class="max-h-[300px] overflow-y-auto">
       <div
         v-if="loading && suggestions.length === 0"
-        class="py-6 text-center text-sm text-muted-foreground"
+        class="p-2 py-6 text-center text-sm text-muted-foreground"
       >
         <slot name="loading">等等...還在搜尋中！</slot>
       </div>
 
-      <div v-if="suggestions.length > 0">
+      <div v-if="suggestions.length > 0" class="p-2">
         <div class="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
           {{ groupHeading }}
         </div>
