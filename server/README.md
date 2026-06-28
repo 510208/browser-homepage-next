@@ -1,4 +1,4 @@
-<center><img src="/docs/assets/wordmarks.svg" alt="Logo" width="200" align="right" /></center>
+<center><img src="/docs/assets/wordmarks.svg" alt="Logo" width="300" align="right" /></center>
 
 # Browser Homepage Next Server side
 
