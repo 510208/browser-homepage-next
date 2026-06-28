@@ -1,0 +1,28 @@
+{
+  "url": "http://127.0.0.1:5000/api/media",
+  "method": "GET",
+  "params": [],
+  "headers": [
+    {
+      "id": "8946416f-2038-44d5-ab4c-71ad81515f2f",
+      "enabled": true,
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "id": "f0716013-0876-4eeb-b79a-f998a06331c9",
+      "enabled": true,
+      "key": "User-Agent",
+      "value": "LigHTTP/0.4.2"
+    }
+  ],
+  "auth": {
+    "auth_type": "none",
+    "content": {}
+  },
+  "body": {
+    "type": "None",
+    "content": ""
+  },
+  "proxy": null
+}
