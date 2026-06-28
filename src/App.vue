@@ -11,6 +11,9 @@ import Bookmarks from "@/components/widgets/bookmarks/Bookmarks.vue";
 import { TrendingBadgeList } from "@/components/widgets/trending-badges";
 import { DeviceBadgeList } from "@/components/widgets/device";
 
+import { useDeviceDataStore } from "@/stores/useDeviceDataStore";
+const deviceData = useDeviceDataStore();
+
 import { BottomCenter, RightTop, LeftTop, LeftBottom, RightBottom } from "@/components/container";
 
 import "vue-sonner/style.css";
@@ -174,6 +177,15 @@ onUnmounted(() => {
   </div>
 
   <div id="sh-background" class="pointer-events-none fixed top-0 left-0 -z-10 h-screen w-screen">
+    <!-- 低電量背景遮罩（電量低於10%時顯示） -->
+    <div
+      v-if="
+        deviceData?.deviceData?.battery?.percent !== undefined &&
+        deviceData.deviceData.battery.percent <= 10
+      "
+      class="absolute inset-0 animate-pulse bg-radial from-[#bb8a8a] to-[#FF0000] opacity-95 mix-blend-soft-light"
+    />
+
     <div
       class="absolute inset-0 bg-gradient-to-br from-[#FFFFFF] to-[#555555] mix-blend-soft-light"
     />
