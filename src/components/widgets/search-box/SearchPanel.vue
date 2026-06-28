@@ -12,9 +12,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, watch } from "vue";
 import CustomSearchPanel from "@/components/ui/SearchCommandPanel.vue";
-import hotkeys from "hotkeys-js";
 
 // 狀態定義
 const searchQuery = ref("");
@@ -111,22 +110,5 @@ watch(searchQuery, (newQuery) => {
   cooldownTimer = setTimeout(() => {
     fetchSearchSuggestions(newQuery);
   }, 500);
-});
-
-// 生命週期設定
-onMounted(() => {
-  searchQuery.value = "";
-
-  // 綁定全局快捷鍵（選用：如 Cmd+K 或是 Ctrl+K，可以自行決定是否保留）
-  hotkeys("cmd+k, ctrl+k", (event) => {
-    event.preventDefault();
-    // 這裡可以觸發 focus 或顯示面板的邏輯
-  });
-});
-
-onBeforeUnmount(() => {
-  if (cooldownTimer) clearTimeout(cooldownTimer);
-  // 解除快捷鍵綁定
-  hotkeys.unbind("cmd+k, ctrl+k");
 });
 </script>
