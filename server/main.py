@@ -1,10 +1,8 @@
 import ctypes
 import logging
-import os
 import sys
 import threading
 import time
-import winreg
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import psutil
@@ -13,8 +11,6 @@ import smtc
 import click
 from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QMenu
 from PySide6.QtGui import QIcon, QAction
-import win32api
-import win32gui
 
 from config import MOCK_CONFIG, FlaskLogMessage
 
@@ -31,77 +27,6 @@ logging.basicConfig(
 logging.getLogger("werkzeug").setLevel(logging.INFO)
 
 psutil.cpu_percent(interval=None, percpu=True)
-
-
-# region utils
-def _get_primary_network_info():
-    """精確篩選實體主要網卡並回傳類型與名稱"""
-    net_type = "沒有連線"
-    net_name = "N/A"
-
-    try:
-        if_addrs = psutil.net_if_addrs()
-        if_stats = psutil.net_if_stats()
-
-        VIRTUAL_KEYWORDS = [
-            "vmnet",
-            "wsl",
-            "vbox",
-            "virtual",
-            "tailscale",
-            "pseudo",
-            "loopback",
-            "vEthernet",
-        ]
-        primary_interface = None
-
-        for interface, stats in if_stats.items():
-            if not stats.isup or interface == "lo":
-                continue
-
-            name_lower = interface.lower()
-            if any(kw.lower() in name_lower for kw in VIRTUAL_KEYWORDS):
-                continue
-
-            has_valid_ipv4 = False
-            if interface in if_addrs:
-                for addr in if_addrs[interface]:
-                    if addr.family == 2:  # AF_INET (IPv4)
-                        if not addr.address.startswith("127."):
-                            has_valid_ipv4 = True
-                            break
-
-            if has_valid_ipv4:
-                primary_interface = interface
-                break
-
-        if primary_interface:
-            net_name = primary_interface
-            name_lower = primary_interface.lower()
-
-            if (
-                "wlan" in name_lower
-                or "wi-fi" in name_lower
-                or "wireless" in name_lower
-                or "區域連線" in name_lower
-            ):
-                net_type = "Wi-Fi"
-            elif (
-                "ethernet" in name_lower
-                or "eth" in name_lower
-                or "en" in name_lower
-                or "乙太網路" in name_lower
-            ):
-                net_type = "有線網路"
-            else:
-                net_type = "有線網路"
-    except Exception as e:
-        logging.error(f"採集網路資訊時發生異常: {e}")
-
-    return net_type, net_name
-
-
-# endregion
 
 
 class ColoredTuiLogHandler(logging.Handler):
@@ -217,84 +142,74 @@ def run_flask():
 
 # region Windows 控制台視窗顯示/隱藏功能
 # 宣告全域變數以利工作列圖示控制
+GWL_EXSTYLE = -20
+WS_EX_TOOLWINDOW = 0x00000080
+WS_EX_APPWINDOW = 0x00040000
+
 is_console_visible = True
+tray_icon_instance = None
+
+
+def start_flask_server(port):
+    # 啟動 Flask 伺服器並停用 reloader
+    werkzeug_logger = logging.getLogger("werkzeug")
+    werkzeug_logger.setLevel(logging.INFO)
+    flask_app.run(host="0.0.0.0", port=port, debug=True, use_reloader=False)
+
+
+def set_console_taskbar_visible(visible):
+    # 控制終端機視窗在 Windows 工作列（Taskbar）上的顯示或完全隱藏
+    hwnd = ctypes.windll.kernel32.GetConsoleWindow()
+    if not hwnd:
+        return
+
+    # 獲取目前的擴充視窗樣式
+    style = ctypes.windll.user32.GetWindowLongW(hwnd, GWL_EXSTYLE)
+
+    if visible:
+        # 顯示於工作列：移除工具視窗屬性，加上應用程式視窗屬性
+        style = (style & ~WS_EX_TOOLWINDOW) | WS_EX_APPWINDOW
+        ctypes.windll.user32.SetWindowLongW(hwnd, GWL_EXSTYLE, style)
+        ctypes.windll.user32.ShowWindow(hwnd, 5)
+    else:
+        # 從工作列完全消失：移除應用程式視窗屬性，加上工具視窗屬性，並隱藏視窗
+        style = (style & ~WS_EX_APPWINDOW) | WS_EX_TOOLWINDOW
+        ctypes.windll.user32.SetWindowLongW(hwnd, GWL_EXSTYLE, style)
+        ctypes.windll.user32.ShowWindow(hwnd, 0)
 
 
 def toggle_console():
-    """切換 Windows 控制台視窗的顯示或完全隱藏狀態（包含工作列）"""
-    try:
-        # 取得目前的控制台視窗標題
-        ct = win32api.GetConsoleTitle()
-        # 尋找該視窗的 Handle
-        hd = win32gui.FindWindow(None, ct)
-        # 0 代表隱藏視窗（SW_HIDE）
-        win32gui.ShowWindow(
-            hd, 0 if is_console_visible else 5
-        )  # 5 代表顯示視窗（SW_SHOW）
-    except Exception:
-        pass
-
-
-def hide_console_permanently():
-    """強制完全隱藏控制台視窗與工作列標籤"""
+    # 供工作列選單點擊切換顯示/隱藏終端機狀態
     global is_console_visible
-    hwnd = ctypes.windll.kernel32.GetConsoleWindow()
-    if hwnd:
-        # 隱藏視窗
-        ctypes.windll.user32.ShowWindow(hwnd, 0)  # SW_HIDE
-
-        # 修改視窗樣式：移除 WS_EX_APPWINDOW (0x00040000) 並加上 WS_EX_TOOLWINDOW (0x00000080)
-        style = ctypes.windll.user32.GetWindowLongW(hwnd, -20)  # GWL_EXSTYLE
-        style = (style & ~0x00040000) | 0x00000080
-        ctypes.windll.user32.SetWindowLongW(hwnd, -20, style)
-
+    if is_console_visible:
+        set_console_taskbar_visible(False)
         is_console_visible = False
-
-
-def handle_auto_launch():
-    # 將目前執行的腳本寫入 Windows 註冊表以實現開機自動啟動
-    key_path = r"Software\Microsoft\Windows\CurrentVersion\Run"
-    app_name = "BrowserHomepageMediaServer"
-
-    # 獲取當前執行檔路徑或 Python 腳本路徑
-    if getattr(sys, "frozen", False):
-        run_cmd = sys.executable
     else:
-        run_cmd = f'"{sys.executable}" "{os.path.abspath(__file__)}"'
-
-    try:
-        key = winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER, key_path, 0, winreg.KEY_SET_VALUE
-        )
-        winreg.SetValueEx(key, app_name, 0, winreg.REG_SZ, run_cmd)
-        winreg.CloseKey(key)
-        logging.info("已成功設定開機自動啟動")
-    except Exception as e:
-        logging.error(f"無法設定開機自動啟動: {str(e)}")
+        set_console_taskbar_visible(True)
+        is_console_visible = True
 
 
 def setup_tray_icon(app_instance):
     # 建立系統工作列圖示與右鍵選單
-    tray = QSystemTrayIcon(app_instance)
+    global tray_icon_instance
+    tray_icon_instance = QSystemTrayIcon(app_instance)
 
-    # 請替換為您專案中實際的圖示路徑
-    tray.setIcon(QIcon("icon.png"))
+    # 請確保 icon.png 存在於目錄中
+    tray_icon_instance.setIcon(QIcon("icon.png"))
 
     menu = QMenu()
 
-    # 建立切換終端機顯示的動作
     toggle_action = QAction("顯示/隱藏終端機", menu)
     toggle_action.triggered.connect(toggle_console)
     menu.addAction(toggle_action)
 
-    # 建立退出程式的動作
     exit_action = QAction("退出程式", menu)
     exit_action.triggered.connect(QApplication.quit)
     menu.addAction(exit_action)
 
-    tray.setContextMenu(menu)
-    tray.show()
-    return tray
+    tray_icon_instance.setContextMenu(menu)
+    tray_icon_instance.show()
+    return tray_icon_instance
 
 
 # endregion
@@ -311,13 +226,12 @@ def setup_tray_icon(app_instance):
     is_flag=True,
     help="啟動靜默模式（隱藏終端機並顯示工作列圖示）",
 )
-@click.option("--auto-launch", is_flag=True, help="設定程式開機自動啟動")
-def main(is_dev_mode, is_silent_mode, auto_launch):
-    # 主程式入口，處理所有 CLI 參數邏輯
-
-    # 處理開機自動啟動註冊
-    if auto_launch:
-        handle_auto_launch()
+@click.option(
+    "--port", default=5000, type=int, help="指定 Flask 伺服器的連接埠（預設 5000）"
+)
+def main(is_dev_mode, is_silent_mode, port):
+    # 主程式入口，分配執行緒以利 Qt 事件循環正常運作
+    global is_console_visible
 
     # 輸出歡迎訊息
     print(
@@ -327,51 +241,43 @@ def main(is_dev_mode, is_silent_mode, auto_launch):
 | $$  \ $$ /$$$$$$   /$$$$$$  /$$  /$$  /$$ /$$$$$$$  /$$$$$$   /$$$$$$         | $$  | $$ /$$$$$$  /$$$$$$/$$$$   /$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$ 
 | $$$$$$$/ /$$__  $$ /$$__  $$| $$ | $$ | $$ /$$_____/ /$$__  $$ /$$__  $$        | $$$$$$$$ /$$__  $$| $$_  $$_  $$ /$$__  $$ /$$__  $$ |____  $$ /$$__  $$ /$$__  $$
 | $$__  $$| $$  \__/| $$  \ $$| $$ | $$ | $$|  $$$$$$ | $$$$$$$$| $$  \__/        | $$__  $$| $$  \ $$| $$ \ $$ \ $$| $$$$$$$$| $$  \ $$  /$$$$$$$| $$  \ $$| $$$$$$$$
-| $$  \ $$| $$      | $$  | $$| $$ | $$ | $$ \____  $$| $$_____/| $$              | $$  | $$| $$  | $$| $$ | $$ | $$| $$_____/| $$  | $$ /$$__  $$| $$  | $$| $$_____/
+| $$  \ $$| $$      | $$  | $$| $$ | $$ | $$ \____  $$| $$_____/| $$              | $$  | $$| $$  | $$| $$ | $$ | $$| $$_____/| $$  | $$ /$$__  $$| $$  \ $$| $$_____/
 | $$$$$$$/| $$      |  $$$$$$/|  $$$$$/$$$$/ /$$$$$$$/|  $$$$$$$| $$              | $$  | $$|  $$$$$$/| $$ | $$ | $$|  $$$$$$$| $$$$$$$/|  $$$$$$$|  $$$$$$$|  $$$$$$$
 |_______/ |__/       \______/  \_____/\___/ |_______/  \_______/|__/              |__/  |__/ \______/ |__/ |__/ |__/ \_______/| $$____/  \_______/ \____  $$ \_______/
-                                                                                                                              | $$                 /$$  \ $$          
-                                                                                                                              | $$                |  $$$$$$/          
-                                                                                                                              |__/                 \______/           
-  /$$$$$$                                                                                                                                                             
- /$$__  $$                                                                                                                                                            
-| $$  \__/ /$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$   /$$$$$$                                                                                                             
-|  $$$$$$  /$$__  $$ /$$__  $$|  $$ /$$//$$__  $$ /$$__  $$                                                                                                             
- \____  $$| $$$$$$$$| $$  \__/ \  $$$/ /$$$$$$$$| $$  \__/                                                                                                             
- /$$  \ $$| $$_____/| $$        \  $/  | $$_____/| $$                                                                                                                 
-|  $$$$$$/|  $$$$$$$| $$         \_/   |  $$$$$$$| $$                                                                                                                 
- \______/  \_______/|__/                \_______/|__/                                                                                                                 
 """
     )
     logging.info("啟動伺服器中...")
 
-    # 處理靜默模式下的視窗隱藏與 Qt 事件循環
-    qt_app = None
+    # 初始化 Qt 應用程式
+    qt_app = QApplication(sys.argv)
+
+    # 設定工作列圖示（一律建立，確保功能可用）
+    _tray = setup_tray_icon(qt_app)
+
+    # 處理靜默模式下的視窗完全隱藏
     if is_silent_mode:
-        hide_console_permanently()
-        qt_app = QApplication(sys.argv)
-        _tray = setup_tray_icon(qt_app)
+        set_console_taskbar_visible(False)
+        is_console_visible = False
+
+    # 啟動 Flask 背景執行緒
+    flask_thread = threading.Thread(
+        target=start_flask_server, args=(port,), daemon=True
+    )
+    flask_thread.start()
 
     if is_dev_mode:
         from tui_panels import MockControlApp
 
         tui_app = MockControlApp()
 
-        # 修正：必須將全域變數 tui_instance 指向目前的 tui_app 實例
-        global tui_instance
-        tui_instance = tui_app
+        # 關鍵修改：將會阻塞主執行緒的 TUI 放到背景執行緒執行
+        tui_thread = threading.Thread(target=tui_app.run, daemon=True)
+        tui_thread.start()
 
-        # 確保呼叫的是 run_flask（其內部會執行 setup_unified_logging() 重新綁定 logger）
-        flask_thread = threading.Thread(target=run_flask, daemon=True)
-        flask_thread.start()
-
-        # 啟動 TUI 主事件迴圈
-        tui_app.run()
-    else:
-        print("正在以常規模式啟動伺服器 (連接埠: 5000)...")
-
-        flask_app.run(host="0.0.0.0", port=5000)
+    # 主執行緒一律交由 Qt 事件循環接管，確保滑鼠點擊工作列選單時能即時響應
+    sys.exit(qt_app.exec())
 
 
 if __name__ == "__main__":
+    sys.stdout.reconfigure(line_buffering=True)  # type: ignore
     main()
