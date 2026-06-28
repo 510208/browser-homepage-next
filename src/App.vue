@@ -181,7 +181,8 @@ onUnmounted(() => {
     <div
       v-if="
         deviceData?.deviceData?.battery?.percent !== undefined &&
-        deviceData.deviceData.battery.percent <= 10
+        deviceData.deviceData.battery.percent <= 10 &&
+        !deviceData.deviceData.battery.power_plugged
       "
       class="absolute inset-0 animate-pulse bg-radial from-[#bb8a8a] to-[#FF0000] opacity-95 mix-blend-soft-light"
     />
