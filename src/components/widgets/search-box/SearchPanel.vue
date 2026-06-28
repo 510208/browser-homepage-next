@@ -22,11 +22,11 @@ const highlightedIndex = ref(-1); // 目前鍵盤選中的索引
 const isLoading = ref(false); // 是否正在發送 API 請求
 let cooldownTimer: ReturnType<typeof setTimeout> | null = null;
 
-// 執行 Google 搜尋跳轉
+// 執行 Google 搜尋，在目前分頁開啟新分頁
 function doSearch(query: string) {
   const target = query.trim();
   if (!target) return;
-  window.open(`https://www.google.com/search?q=${encodeURIComponent(target)}`, "_blank");
+  window.open(`https://www.google.com/search?q=${encodeURIComponent(target)}`, "_self");
 }
 
 // 當點擊或選取了某個搜尋建議時
