@@ -40,6 +40,9 @@ function handleKeyDown(event: KeyboardEvent) {
     "ArrowDown",
     "ArrowLeft",
     "ArrowRight",
+    "F1",
+    "F5",
+    "F12",
   ];
   if (!isOpen.value && !KEY_BLACKLIST.includes(event.key) && !/^[1-9]$/.test(event.key)) {
     isOpen.value = !isOpen.value;
