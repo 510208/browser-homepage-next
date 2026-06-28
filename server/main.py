@@ -14,6 +14,9 @@ import click
 from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QMenu
 from PySide6.QtGui import QIcon, QAction
 
+import signal
+from PySide6.QtCore import QTimer
+
 from config import MOCK_CONFIG, FlaskLogMessage
 
 multiprocessing.freeze_support()
@@ -284,10 +287,18 @@ def main(is_dev_mode, is_silent_mode, port):
         from tui_panels import MockControlApp
 
         tui_app = MockControlApp()
-
-        # 關鍵修改：將會阻塞主執行緒的 TUI 放到背景執行緒執行
         tui_thread = threading.Thread(target=tui_app.run, daemon=True)
         tui_thread.start()
+
+    def sigint_handler(sig, frame):
+        logging.info("接收到中斷訊號，正在安全關閉伺服器...")
+        qt_app.quit()
+
+    signal.signal(signal.SIGINT, sigint_handler)
+
+    timer = QTimer()
+    timer.start(100)
+    timer.timeout.connect(lambda: None)
 
     # 主執行緒一律交由 Qt 事件循環接管，確保滑鼠點擊工作列選單時能即時響應
     sys.exit(qt_app.exec())
@@ -295,4 +306,9 @@ def main(is_dev_mode, is_silent_mode, port):
 
 if __name__ == "__main__":
     sys.stdout.reconfigure(line_buffering=True)  # type: ignore
-    main()
+
+    try:
+        main()
+    except KeyboardInterrupt:
+        logging.info("伺服器已被使用者中斷，正在安全關閉...")
+        sys.exit(0)
