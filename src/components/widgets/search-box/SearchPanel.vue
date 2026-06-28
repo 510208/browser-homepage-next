@@ -1,85 +1,110 @@
 <template>
-  <Command :should-filter="false">
-    <CommandInput placeholder="搜尋你想搜的..." v-model="searchQuery" @keydown.enter="doSearch" />
-
-    <CommandList>
-      <CommandEmpty v-if="searchQuery && searchSuggestions.length === 0">
-        等等...還在搜尋中！
-      </CommandEmpty>
-
-      <CommandGroup heading="搜尋建議">
-        <CommandItem
-          v-for="suggestion in searchSuggestions"
-          :key="suggestion"
-          :value="suggestion"
-          @select="
-            searchQuery = suggestion;
-            doSearch();
-          "
-        >
-          {{ suggestion }}
-        </CommandItem>
-      </CommandGroup>
-    </CommandList>
-  </Command>
+  <CustomSearchPanel
+    v-model="searchQuery"
+    :suggestions="searchSuggestions"
+    v-model:highlightedIndex="highlightedIndex"
+    :loading="isLoading"
+    @keydown:down="moveHighlight(1)"
+    @keydown:up="moveHighlight(-1)"
+    @keydown:enter="selectHighlighted"
+    @select="handleSelect"
+  />
 </template>
 
 <script setup lang="ts">
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import CustomSearchPanel from "@/components/ui/SearchCommandPanel.vue";
+import hotkeys from "hotkeys-js";
 
+// 狀態定義
 const searchQuery = ref("");
 const searchSuggestions = ref<string[]>([]);
+const highlightedIndex = ref(-1); // 目前鍵盤選中的索引
+const isLoading = ref(false); // 是否正在發送 API 請求
 let cooldownTimer: ReturnType<typeof setTimeout> | null = null;
 
-function doSearch() {
-  if (!searchQuery.value.trim()) return;
-  window.open(`https://www.google.com/search?q=${encodeURIComponent(searchQuery.value)}`, "_blank");
+// 執行 Google 搜尋跳轉
+function doSearch(query: string) {
+  const target = query.trim();
+  if (!target) return;
+  window.open(`https://www.google.com/search?q=${encodeURIComponent(target)}`, "_blank");
 }
 
+// 當點擊或選取了某個搜尋建議時
+function handleSelect(suggestion: string) {
+  searchQuery.value = suggestion;
+  doSearch(suggestion);
+}
+
+// 處理鍵盤上下鍵導覽邏輯
+function moveHighlight(direction: number) {
+  const total = searchSuggestions.value.length;
+  if (total === 0) return;
+
+  // 用取餘數公式來達到循環導覽（到底部再按往下會回到第一個）
+  highlightedIndex.value = (highlightedIndex.value + direction + total) % total;
+}
+
+// 當在輸入框按下 Enter 鍵時的邏輯
+function selectHighlighted() {
+  const total = searchSuggestions.value.length;
+  // 如果有透過上下鍵高亮某個建議，就搜尋該建議，否則搜尋當前輸入框內容
+  if (highlightedIndex.value >= 0 && highlightedIndex.value < total) {
+    const selected = searchSuggestions.value[highlightedIndex.value];
+    searchQuery.value = selected;
+    doSearch(selected);
+  } else {
+    doSearch(searchQuery.value);
+  }
+}
+
+// 發送 API 請求
 function fetchSearchSuggestions(query: string) {
   console.log("Fetching search suggestions for query:", query);
   if (!query.trim()) {
     searchSuggestions.value = [];
+    highlightedIndex.value = -1;
     return;
   }
 
-  // 呼叫你自己寫好的 Cloudflare Worker 代理 API
+  isLoading.value = true;
   const API_URL = `https://api.samhacker.xyz/search_suggestions?q=${encodeURIComponent(query)}`;
 
   fetch(API_URL)
     .then((response) => {
       if (!response.ok) throw new Error("Network response was not ok");
-      // 直接解析後端回傳的 JSON 陣列
       return response.json();
     })
     .then((suggestions: string[]) => {
       console.log("Google Suggestion Data (Parsed):", suggestions);
 
-      // 因為後端回傳的直接就是 ["關鍵字1", "關鍵字2", ...] 陣列
-      // 這裡直接切前 7 筆塞給你的響應式變數（如 Vue 的 ref）即可
-      searchSuggestions.value = suggestions.slice(0, 7);
+      // HTML 實體轉換解碼
+      const decoded = suggestions.map((suggestion) => {
+        const parser = new DOMParser();
+        return parser.parseFromString(suggestion, "text/html").documentElement.textContent || "";
+      });
+
+      searchSuggestions.value = decoded.slice(0, 7);
+      highlightedIndex.value = -1; // 每次拿到新建議清單，重置高亮
     })
     .catch((error) => {
       console.error("Error fetching search suggestions:", error);
       searchSuggestions.value = [];
+      highlightedIndex.value = -1;
+    })
+    .finally(() => {
+      isLoading.value = false;
     });
 }
 
-// watch 邏輯保持不變
+// 監聽輸入框數值變更（Debounce 防抖機制）
 watch(searchQuery, (newQuery) => {
   if (cooldownTimer) clearTimeout(cooldownTimer);
 
   console.log("Search query changed:", newQuery);
   if (!newQuery.trim()) {
-    // searchSuggestions.value = [];
+    searchSuggestions.value = [];
+    highlightedIndex.value = -1;
     return;
   }
 
@@ -88,7 +113,20 @@ watch(searchQuery, (newQuery) => {
   }, 500);
 });
 
+// 生命週期設定
 onMounted(() => {
   searchQuery.value = "";
+
+  // 綁定全局快捷鍵（選用：如 Cmd+K 或是 Ctrl+K，可以自行決定是否保留）
+  hotkeys("cmd+k, ctrl+k", (event) => {
+    event.preventDefault();
+    // 這裡可以觸發 focus 或顯示面板的邏輯
+  });
+});
+
+onBeforeUnmount(() => {
+  if (cooldownTimer) clearTimeout(cooldownTimer);
+  // 解除快捷鍵綁定
+  hotkeys.unbind("cmd+k, ctrl+k");
 });
 </script>
