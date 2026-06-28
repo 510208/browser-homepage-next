@@ -3,6 +3,7 @@
     class="mx-auto w-full max-w-2xl overflow-hidden rounded-xl border bg-popover text-popover-foreground shadow-md"
   >
     <div class="flex items-center border-b px-3">
+      <SearchIcon class="mr-2 size-5 shrink-0 opacity-70" />
       <input
         type="text"
         :placeholder="placeholder"
@@ -31,17 +32,18 @@
           <li
             v-for="(suggestion, index) in suggestions"
             :key="`${suggestion}-${index}`"
+            :data-highlighted="highlightedIndex === index"
             :class="[
-              'flex cursor-pointer items-center gap-2 rounded-md px-2 py-2 text-sm transition-colors',
+              'flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors duration-75',
               highlightedIndex === index
-                ? 'bg-accent font-medium text-accent-foreground'
+                ? 'bg-accent font-medium text-accent-foreground '
                 : 'text-foreground hover:bg-accent/50',
             ]"
             @mouseenter="$emit('update:highlightedIndex', index)"
             @click="$emit('select', suggestion)"
           >
             <slot name="item-icon">
-              <ArrowRightIcon class="h-4 w-4 shrink-0 opacity-70" />
+              <ArrowRightIcon class="sh-arrow-animate h-4 w-4 shrink-0 opacity-70" />
             </slot>
             <span>{{ suggestion }}</span>
           </li>
@@ -52,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowRightIcon } from "@lucide/vue";
+import { ArrowRightIcon, SearchIcon } from "@lucide/vue";
 
 withDefaults(
   defineProps<{
@@ -79,3 +81,24 @@ defineEmits<{
   (e: "keydown:enter"): void;
 }>();
 </script>
+
+<style scoped>
+/* 當滑鼠 hover 到 li，或者 li 具備鍵盤高亮屬性時，對內部的 sh-arrow-animate 觸發動畫 */
+li:hover .sh-arrow-animate,
+li[data-highlighted="true"] .sh-arrow-animate {
+  animation: shakeX 0.6s ease-in-out infinite;
+}
+
+@keyframes shakeX {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+</style>
