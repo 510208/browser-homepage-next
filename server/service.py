@@ -74,10 +74,18 @@ def get_disk_info() -> dict:
 async def _get_current_ssid():
     os_name = platform.system()
 
+    # 配置 Windows 隱藏視窗的啟動資訊
+    startupinfo = None
+    if os_name == "Windows":
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        startupinfo.wShowWindow = 0  # 0 代表 SW_HIDE，完全隱藏視窗
+
     try:
         if os_name == "Windows":
+            # 傳入 startupinfo 參數，阻止 netsh 指令彈出黑色視窗
             out = subprocess.check_output(
-                ["netsh", "wlan", "show", "interfaces"]
+                ["netsh", "wlan", "show", "interfaces"], startupinfo=startupinfo
             ).decode("utf-8", errors="ignore")
             match = re.search(r"^\s*SSID\s*:\s*(.*)$", out, re.MULTILINE)
             return match.group(1).strip() if match else "None"
