@@ -1,5 +1,7 @@
 import ctypes
 import logging
+import multiprocessing
+import os
 import sys
 import threading
 import time
@@ -14,6 +16,8 @@ from PySide6.QtGui import QIcon, QAction
 
 from config import MOCK_CONFIG, FlaskLogMessage
 
+multiprocessing.freeze_support()
+
 flask_app = Flask(__name__)
 CORS(flask_app)
 
@@ -27,6 +31,17 @@ logging.basicConfig(
 logging.getLogger("werkzeug").setLevel(logging.INFO)
 
 psutil.cpu_percent(interval=None, percpu=True)
+
+
+def get_asset_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS  # type: ignore
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 class ColoredTuiLogHandler(logging.Handler):
@@ -195,7 +210,7 @@ def setup_tray_icon(app_instance):
     tray_icon_instance = QSystemTrayIcon(app_instance)
 
     # 請確保 icon.png 存在於目錄中
-    tray_icon_instance.setIcon(QIcon("icon.png"))
+    tray_icon_instance.setIcon(QIcon(get_asset_path("icon.png")))
 
     menu = QMenu()
 
@@ -215,7 +230,7 @@ def setup_tray_icon(app_instance):
 # endregion
 
 
-@click.command()
+@click.command(context_settings=dict(ignore_unknown_options=True))
 @click.option(
     "-d", "--dev", "is_dev_mode", is_flag=True, help="啟動開發者模式（啟用 TUI 面板）"
 )
