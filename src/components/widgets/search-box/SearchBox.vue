@@ -1,6 +1,6 @@
 <template>
   <Button
-    class="px-auto h-11 max-h-none w-[300px] border-none bg-white/20 py-2.5 text-center text-base font-light text-white/80 hover:bg-white/30"
+    class="px-auto h-11 max-h-none w-[300px] border-none bg-white/20 py-2.5 text-center text-base font-light text-white/80 ring-white/20 hover:bg-white/30 focus:ring-2 focus:ring-white/30"
     @click="isOpen = true"
   >
     <SearchIcon :size="24" class="size-6 text-brown-500" />
