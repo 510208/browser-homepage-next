@@ -36,7 +36,7 @@
         :style="iconStyle"
         :class="[
           'absolute top-0 left-0 transition-all duration-500',
-          currentActiveIcon === 'Warning' ? 'animate-pulse opacity-100' : 'opacity-0',
+          currentActiveIcon === 'Warning' ? 'animate-bounce opacity-100' : 'opacity-0',
         ]"
         :size="24"
       />
@@ -132,10 +132,10 @@ const currentIconColor = computed(() => {
     return COLORS.text_gray_400;
   }
 
-  if (batteryData.power_plugged) {
-    // 充電中，對應您自定義的 brown-500 十六進位值（此處以範例色值代入，可依專案實際變數修改）
-    return COLORS.text_brown_500;
-  }
+  // if (batteryData.power_plugged) {
+  //   // 充電中，對應您自定義的 brown-500 十六進位值（此處以範例色值代入，可依專案實際變數修改）
+  //   return COLORS.text_brown_500;
+  // }
 
   const batteryLevel = batteryData.percent;
   if (batteryLevel > 75) {
