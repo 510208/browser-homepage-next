@@ -47,6 +47,16 @@ function moveHighlight(direction: number) {
 // 當在輸入框按下 Enter 鍵時的邏輯
 function selectHighlighted() {
   const total = searchSuggestions.value.length;
+
+  // 如果輸入z0 u4，自動開啟 Google 翻譯
+  if (
+    searchQuery.value.trim().toLowerCase() === "z0 u4" ||
+    searchQuery.value.trim().toLowerCase() === "翻譯"
+  ) {
+    window.open("https://translate.google.com/", "_self");
+    return;
+  }
+
   // 如果有透過上下鍵高亮某個建議，就搜尋該建議，否則搜尋當前輸入框內容
   if (highlightedIndex.value >= 0 && highlightedIndex.value < total) {
     const selected = searchSuggestions.value[highlightedIndex.value];
