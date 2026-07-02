@@ -44,6 +44,12 @@ function handleKeyDown(event: KeyboardEvent) {
     "F5",
     "F12",
   ];
+
+  // 檢查是否有已經開啟的其他疊加 data-slot="dialog-overlay" & data-state="open"
+  if (document.querySelector('[data-slot="dialog-overlay"][data-state="open"]')) {
+    return;
+  }
+
   if (!isOpen.value && !KEY_BLACKLIST.includes(event.key) && !/^[1-9]$/.test(event.key)) {
     isOpen.value = !isOpen.value;
   }
