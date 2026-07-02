@@ -9,9 +9,11 @@ import {
 } from "@components/ui/context-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@components/ui/tooltip";
 import type { Bookmark } from "./types";
+import BookmarkKey from "./BookmarkKey.vue";
 
 const props = defineProps<{
   bookmark: Bookmark;
+  shortcutKey?: string;
 }>();
 
 const emit = defineEmits<{
@@ -47,7 +49,7 @@ function handleDelete() {
                 :href="props.bookmark.url"
                 target="_self"
                 rel="noopener noreferrer"
-                class="flex size-[50px] items-center justify-center overflow-hidden transition-transform hover:scale-105"
+                class="group relative flex size-[50px] items-center justify-center transition-transform hover:scale-105"
               >
                 <img
                   :src="faviconUrl"
@@ -55,9 +57,17 @@ function handleDelete() {
                   class="h-7 w-7 rounded-sm object-contain"
                   loading="lazy"
                 />
+
+                <!-- Shortcut Key (Right Top) -->
+                <BookmarkKey class="absolute -top-1 -right-1" v-if="props.shortcutKey">
+                  {{ props.shortcutKey }}
+                </BookmarkKey>
               </a>
             </TooltipTrigger>
-            <TooltipContent side="left" class="max-w-xs truncate">
+            <TooltipContent
+              side="left"
+              class="flex max-w-xs items-center justify-end gap-0.5 truncate"
+            >
               <p>{{ props.bookmark.url }}</p>
             </TooltipContent>
           </Tooltip>

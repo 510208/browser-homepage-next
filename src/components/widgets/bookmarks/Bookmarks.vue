@@ -60,9 +60,10 @@ onUnmounted(() => {
         class="flex w-full flex-col items-center gap-3"
       >
         <BookmarkItem
-          v-for="bookmark in bookmarks"
+          v-for="(bookmark, index) in bookmarks"
           :key="bookmark.id"
           :bookmark="bookmark"
+          :shortcut-key="`${index + 1}`"
           @edit="openEditDialog"
           @delete="handleDeleteBookmark"
         />
