@@ -41,7 +41,7 @@ const handleCopy = () => {
     class="relative flex w-1/2 flex-1 flex-col justify-between rounded-l-2xl border-none bg-transparent! p-4"
   >
     <!-- 頂部：語言標籤與清除按鈕 -->
-    <InputGroupAddon align="block-start" class="flex w-full items-center justify-between p-0">
+    <InputGroupAddon align="block-start" class="flex h-7 w-full items-center justify-between p-0">
       <InputGroupText class="text-sm font-medium text-[#8C6D5D]">
         {{ props.languageLabel || "原文" }}
       </InputGroupText>
@@ -60,7 +60,7 @@ const handleCopy = () => {
     <InputGroupTextarea
       v-model="textContent"
       placeholder="請輸入文字..."
-      class="min-h-[120px] resize-none border-none bg-transparent p-0 text-base font-normal text-[#EAD0C3] ring-0 focus-within:ring-0 hover:ring-0 focus-visible:ring-0"
+      class="my-3 min-h-[120px] resize-none border-none bg-transparent p-0 text-lg! font-normal text-[#EAD0C3] ring-0 focus-within:ring-0 hover:ring-0 focus-visible:ring-0"
     />
 
     <!-- 底部右側：功能按鈕膠囊區 -->

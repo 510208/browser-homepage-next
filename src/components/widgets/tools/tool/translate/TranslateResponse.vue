@@ -31,7 +31,7 @@ const languages = [
 const selectedLanguage = ref(
   languages.find((l) => l.label === props.initialLanguage) || languages[0],
 );
-const translatedText = ref("");
+const translatedText = ref("test");
 
 const handleSelectLanguage = (lang: (typeof languages)[number]) => {
   selectedLanguage.value = lang;
