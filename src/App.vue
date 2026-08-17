@@ -10,6 +10,7 @@ import { Weather } from "@/components/widgets/weather";
 import Bookmarks from "@/components/widgets/bookmarks/Bookmarks.vue";
 import { TrendingBadgeList } from "@/components/widgets/trending-badges";
 import { DeviceBadgeList } from "@/components/widgets/device";
+import { Tools } from "@/components/widgets/tools";
 
 import { useDeviceDataStore } from "@/stores/useDeviceDataStore";
 const deviceData = useDeviceDataStore();
@@ -173,6 +174,7 @@ onUnmounted(() => {
 
     <LeftTop>
       <Weather />
+      <Tools class="mt-30" />
     </LeftTop>
 
     <LeftBottom>
