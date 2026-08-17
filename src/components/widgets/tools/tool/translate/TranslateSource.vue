@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { Copy, Search, X } from "@lucide/vue";
 import {
   InputGroup,
@@ -19,10 +18,11 @@ const emit = defineEmits<{
   (e: "copy", text: string): void;
 }>();
 
-const textContent = ref("");
+// 改用 defineModel 接軌 TranslateDialog 的 v-model:source-text
+const sourceText = defineModel<string>("sourceText", { default: "" });
 
 const handleClear = () => {
-  textContent.value = "";
+  sourceText.value = "";
   emit("clear");
 };
 
@@ -31,14 +31,14 @@ const handleSearch = () => {
 };
 
 const handleCopy = () => {
-  navigator.clipboard.writeText(textContent.value);
-  emit("copy", textContent.value);
+  navigator.clipboard.writeText(sourceText.value);
+  emit("copy", sourceText.value);
 };
 </script>
 
 <template>
   <InputGroup
-    class="relative flex w-1/2 flex-1 flex-col justify-between rounded-l-2xl border-none bg-transparent! p-4"
+    class="relative flex w-1/2 flex-1 flex-col justify-between rounded-l-2xl rounded-r-none border-none bg-transparent! p-4"
   >
     <!-- 頂部：語言標籤與清除按鈕 -->
     <InputGroupAddon align="block-start" class="flex h-7 w-full items-center justify-between p-0">
@@ -58,7 +58,7 @@ const handleCopy = () => {
 
     <!-- 中間：文字輸入區 -->
     <InputGroupTextarea
-      v-model="textContent"
+      v-model="sourceText"
       placeholder="請輸入文字..."
       class="my-3 min-h-[120px] resize-none border-none bg-transparent p-0 text-lg! font-normal text-[#EAD0C3] ring-0 focus-within:ring-0 hover:ring-0 focus-visible:ring-0"
     />

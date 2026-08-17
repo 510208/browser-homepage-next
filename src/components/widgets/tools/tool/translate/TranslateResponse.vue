@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { Copy, Repeat, X, Check, ChevronDown } from "@lucide/vue";
+import { Copy, Repeat, X, Check, ChevronDown, Loader2 } from "@lucide/vue";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,61 +8,47 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const props = defineProps<{
-  initialLanguage?: string;
+  translatedText: string;
+  isLoading?: boolean;
 }>();
 
 const emit = defineEmits<{
   (e: "clear"): void;
   (e: "swap"): void;
   (e: "copy", text: string): void;
-  (e: "languageChange", lang: string): void;
 }>();
 
-// 可選語言列表
+// 改用 defineModel 接軌 TranslateDialog 的 v-model:target-lang
+const targetLang = defineModel<string>("targetLang", { default: "en" });
+
 const languages = [
-  { label: "English (US)", value: "en-US" },
-  { label: "English (UK)", value: "en-UK" },
-  { label: "繁體中文", value: "zh-TW" },
-  { label: "日本語", value: "ja-JP" },
-  { label: "한국어", value: "ko-KR" },
+  { label: "English (US)", value: "en" },
+  { label: "繁體中文", value: "zh_HANT" },
+  { label: "日本語", value: "ja" },
+  { label: "한국어", value: "ko" },
 ];
 
-const selectedLanguage = ref(
-  languages.find((l) => l.label === props.initialLanguage) || languages[0],
-);
-const translatedText = ref("test");
-
-const handleSelectLanguage = (lang: (typeof languages)[number]) => {
-  selectedLanguage.value = lang;
-  emit("languageChange", lang.value);
-};
-
-const handleClear = () => {
-  translatedText.value = "";
-  emit("clear");
+const handleSelectLanguage = (langCode: string) => {
+  targetLang.value = langCode;
 };
 
 const handleCopy = () => {
-  navigator.clipboard.writeText(translatedText.value);
-  emit("copy", translatedText.value);
-};
-
-const handleSwap = () => {
-  emit("swap");
+  navigator.clipboard.writeText(props.translatedText);
+  emit("copy", props.translatedText);
 };
 </script>
 
 <template>
   <div
-    class="relative flex min-h-[220px] w-1/2 flex-1 flex-col justify-between rounded-r-2xl bg-brown-700 p-4 text-brown-600"
+    class="relative flex w-1/2 flex-1 flex-col justify-between rounded-l-none rounded-r-2xl bg-[#4A2D1F] p-4 text-[#EAD0C3]"
   >
-    <!-- 頂部：目標語言下拉選單與關閉按鈕 -->
-    <div class="flex w-full items-center justify-between">
+    <!-- 頂部：目標語言選單與關閉按鈕 -->
+    <header class="flex h-7 w-full items-center justify-between">
       <DropdownMenu>
         <DropdownMenuTrigger
-          class="flex items-center gap-1 rounded-md px-1.5 py-1 text-sm font-medium transition-colors"
+          class="flex items-center gap-1 rounded-md px-1.5 py-1 text-sm font-medium text-[#C29B88] transition-colors hover:bg-[#5C3A29] hover:text-[#EAD0C3]"
         >
-          <span>{{ selectedLanguage.label }}</span>
+          <span>{{ languages.find((l) => l.value === targetLang)?.label || targetLang }}</span>
           <ChevronDown class="size-4 opacity-70" />
         </DropdownMenuTrigger>
 
@@ -71,11 +56,11 @@ const handleSwap = () => {
           <DropdownMenuItem
             v-for="lang in languages"
             :key="lang.value"
-            class="flex items-center justify-between hover:bg-[#4A2D1F] hover:text-[#EAD0C3] focus:bg-[#4A2D1F] focus:text-[#EAD0C3]"
-            @click="handleSelectLanguage(lang)"
+            class="flex items-center justify-between hover:bg-[#4A2D1F] hover:text-[#EAD0C3]"
+            @click="handleSelectLanguage(lang.value)"
           >
             <span>{{ lang.label }}</span>
-            <Check v-if="selectedLanguage.value === lang.value" class="size-4 text-[#EAD0C3]" />
+            <Check v-if="targetLang === lang.value" class="size-4 text-[#EAD0C3]" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -83,17 +68,20 @@ const handleSwap = () => {
       <button
         type="button"
         class="flex h-6 w-6 items-center justify-center rounded-full text-[#C29B88] transition-colors hover:bg-[#5C3A29] hover:text-[#EAD0C3]"
-        @click="handleClear"
+        @click="emit('clear')"
       >
         <X class="size-4" />
-        <span class="sr-only">Clear translation</span>
       </button>
-    </div>
+    </header>
 
-    <!-- 中間：翻譯結果展示區域 -->
+    <!-- 中間：翻譯結果與載入狀態 -->
     <main class="my-3 flex-1 overflow-y-auto">
-      <p class="text-base leading-relaxed font-normal whitespace-pre-wrap text-[#EAD0C3]">
-        {{ translatedText }}
+      <div v-if="props.isLoading" class="flex items-center gap-2 text-[#C29B88]">
+        <Loader2 class="size-4 animate-spin" />
+        <span>翻譯中...</span>
+      </div>
+      <p v-else class="text-lg leading-relaxed font-normal whitespace-pre-wrap text-[#EAD0C3]">
+        {{ props.translatedText }}
       </p>
     </main>
 
@@ -103,20 +91,16 @@ const handleSwap = () => {
         <button
           type="button"
           class="flex h-7 w-7 items-center justify-center rounded-full text-[#EAD0C3] transition-colors hover:bg-[#6E4632]"
-          title="複製"
           @click="handleCopy"
         >
           <Copy class="size-4" />
-          <span class="sr-only">Copy</span>
         </button>
         <button
           type="button"
           class="flex h-7 w-7 items-center justify-center rounded-full text-[#EAD0C3] transition-colors hover:bg-[#6E4632]"
-          title="對調語言"
-          @click="handleSwap"
+          @click="emit('swap')"
         >
           <Repeat class="size-4" />
-          <span class="sr-only">Swap language</span>
         </button>
       </div>
     </footer>
