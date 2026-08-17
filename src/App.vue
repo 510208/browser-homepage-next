@@ -19,6 +19,8 @@ import { BottomCenter, RightTop, LeftTop, LeftBottom, RightBottom } from "@/comp
 import "vue-sonner/style.css";
 import { Toaster } from "@/components/ui/sonner";
 
+const IS_DEV = import.meta.env.DEV;
+
 // 宣告計時器變數，用於追蹤游標閒置時間
 let idleTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -27,6 +29,8 @@ let isHidden = false;
 
 // 定義執行隱藏動畫的函式
 const animateWidgetsHide = () => {
+  if (IS_DEV) return;
+
   if (isHidden) return;
   isHidden = true;
 
@@ -81,6 +85,8 @@ const animateWidgetsHide = () => {
 
 // 定義執行顯示動畫的函式
 const animateWidgetsShow = () => {
+  if (IS_DEV) return;
+
   if (!isHidden) return;
   isHidden = false;
 
@@ -115,6 +121,8 @@ const animateWidgetsShow = () => {
 
 // 重設閒置計時器的函式
 const resetIdleTimer = () => {
+  if (IS_DEV) return;
+
   animateWidgetsShow();
 
   if (idleTimer) {
