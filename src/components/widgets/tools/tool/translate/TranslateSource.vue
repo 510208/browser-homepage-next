@@ -60,7 +60,7 @@ const handleCopy = () => {
     <InputGroupTextarea
       v-model="textContent"
       placeholder="請輸入文字..."
-      class="min-h-[120px] resize-none border-none bg-transparent p-0 text-base font-normal text-[#EAD0C3] focus-visible:ring-0"
+      class="min-h-[120px] resize-none border-none bg-transparent p-0 text-base font-normal text-[#EAD0C3] ring-0 focus-within:ring-0 hover:ring-0 focus-visible:ring-0"
     />
 
     <!-- 底部右側：功能按鈕膠囊區 -->
