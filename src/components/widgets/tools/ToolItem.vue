@@ -17,7 +17,7 @@
         </div>
       </DialogTrigger>
 
-      <DialogContent as-child class="flex gap-0 border-none px-0 py-0" @close-auto-focus.prevent>
+      <DialogContent as-child class="flex gap-0 border-none px-0 py-0" @open-auto-focus.prevent>
         <component :is="props.dialogContent" />
       </DialogContent>
     </Dialog>
