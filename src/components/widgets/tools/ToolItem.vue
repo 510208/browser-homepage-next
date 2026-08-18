@@ -19,6 +19,7 @@
       </DialogTrigger>
 
       <DialogContent as-child class="flex gap-0 border-none px-0 py-0">
+        <DialogTitle class="sr-only">{{ props.name }}</DialogTitle>
         <component :is="props.dialogContent" />
       </DialogContent>
     </Dialog>
@@ -28,7 +29,7 @@
 <script setup lang="ts">
 import type { Component } from "vue";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 const props = defineProps<{
   name: string;
