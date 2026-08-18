@@ -23,7 +23,7 @@ const targetLang = defineModel<string>("targetLang", { default: "en" });
 
 const languages = [
   { label: "English (US)", value: "en" },
-  { label: "繁體中文", value: "zh_HANT" },
+  { label: "繁體中文", value: "zh-TW" },
   { label: "日本語", value: "ja" },
   { label: "한국어", value: "ko" },
 ];
