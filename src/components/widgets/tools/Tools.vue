@@ -18,8 +18,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils.ts";
 import ToolItem from "./ToolItem.vue";
 import { Languages } from "@lucide/vue";
+import { defineAsyncComponent } from "vue";
 
-import TranslateDialog from "./tool/translate/TranslateDialog.vue";
+const TranslateDialog = defineAsyncComponent(() => import("./tool/translate/TranslateDialog.vue"));
 
 const props = defineProps<{
   style?: Record<string, string>;

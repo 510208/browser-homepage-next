@@ -1,11 +1,10 @@
 <template>
   <div class="flex w-full cursor-pointer justify-center">
-    <!-- 若有傳入 dialogContent，則渲染 Dialog 結構 -->
     <Dialog>
       <DialogTrigger as-child>
-        <div class="flex h-12 w-12 items-center justify-center focus-within:outline-0">
+        <div class="flex h-12 w-12 items-center justify-center">
           <Tooltip>
-            <TooltipTrigger as-child>
+            <TooltipTrigger as-child class="cursor-pointer">
               <slot />
             </TooltipTrigger>
             <TooltipContent
@@ -18,8 +17,7 @@
         </div>
       </DialogTrigger>
 
-      <DialogContent as-child class="flex gap-0 border-none px-0 py-0">
-        <DialogTitle class="sr-only">{{ props.name }}</DialogTitle>
+      <DialogContent as-child class="flex gap-0 border-none px-0 py-0" @close-auto-focus.prevent>
         <component :is="props.dialogContent" />
       </DialogContent>
     </Dialog>
@@ -29,7 +27,7 @@
 <script setup lang="ts">
 import type { Component } from "vue";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 
 const props = defineProps<{
   name: string;
