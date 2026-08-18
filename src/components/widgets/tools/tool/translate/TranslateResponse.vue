@@ -6,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "vue-sonner";
 
 const props = defineProps<{
   translatedText: string;
@@ -34,6 +35,7 @@ const handleSelectLanguage = (langCode: string) => {
 
 const handleCopy = () => {
   navigator.clipboard.writeText(props.translatedText);
+  toast.success("已複製文字到剪貼簿");
   emit("copy", props.translatedText);
 };
 </script>

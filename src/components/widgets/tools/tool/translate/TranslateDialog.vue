@@ -70,7 +70,7 @@ const handleClear = () => {
 // 對調語言與文字
 const handleSwap = () => {
   if (translatedText.value) {
-    sourceText.value = translatedText.value;
+    [sourceText.value, translatedText.value] = [translatedText.value, sourceText.value];
   }
 };
 </script>

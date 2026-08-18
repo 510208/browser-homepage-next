@@ -7,6 +7,7 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from "@/components/ui/input-group";
+import { toast } from "vue-sonner";
 
 const props = defineProps<{
   languageLabel?: string;
@@ -27,11 +28,21 @@ const handleClear = () => {
 };
 
 const handleSearch = () => {
+  // 如果 sourceText 為空，則不觸發搜尋事件
+  if (!sourceText.value.trim()) {
+    return;
+  }
+
+  // 導向Google搜尋頁面，並將 sourceText 作為查詢參數傳遞
+  const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(sourceText.value)}`;
+  window.open(googleSearchUrl, "_blank");
+
   emit("search");
 };
 
 const handleCopy = () => {
   navigator.clipboard.writeText(sourceText.value);
+  toast.success("已複製文字到剪貼簿");
   emit("copy", sourceText.value);
 };
 </script>
