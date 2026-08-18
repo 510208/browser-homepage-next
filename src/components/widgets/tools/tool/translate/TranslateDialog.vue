@@ -20,7 +20,7 @@ import JsGoogleTranslateFree from "@kreisler/js-google-translate-free";
 import TranslateResponse from "./TranslateResponse.vue";
 import TranslateSource from "./TranslateSource.vue";
 
-const sourceText = ref("我個人認為義大利麵應該拌四十二號混凝土");
+const sourceText = ref("");
 const targetLang = ref("en");
 const translatedText = ref("");
 const isLoading = ref(false);

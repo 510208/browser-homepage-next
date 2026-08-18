@@ -65,11 +65,11 @@ const handleCopy = () => {
 
     <!-- 底部右側：功能按鈕膠囊區 -->
     <InputGroupAddon align="block-end" class="flex justify-end p-0">
-      <div class="flex items-center gap-1 rounded-full bg-[#4A2E20] p-1.5 shadow-sm">
+      <div class="flex items-center gap-1 rounded-full bg-brown-700/60 p-1.5 shadow-sm">
         <InputGroupButton
           variant="ghost"
           size="icon-xs"
-          class="h-7 w-7 rounded-full text-[#EAD0C3] hover:bg-[#5C3A29]"
+          class="hover:text-brown-50 h-7 w-7 rounded-full text-brown-300 hover:bg-brown-800"
           @click="handleSearch"
         >
           <Search class="size-4" />
@@ -77,7 +77,7 @@ const handleCopy = () => {
         <InputGroupButton
           variant="ghost"
           size="icon-xs"
-          class="h-7 w-7 rounded-full text-[#EAD0C3] hover:bg-[#5C3A29]"
+          class="h-7 w-7 rounded-full text-brown-300 hover:bg-brown-800"
           @click="handleCopy"
         >
           <Copy class="size-4" />
