@@ -5,7 +5,7 @@
     </PopoverTrigger>
 
     <PopoverContent
-      class="w-fit p-0 shadow-xl"
+      class="w-fit max-w-60 p-0 shadow-xl"
       side="bottom"
       :side-offset="8"
       @close-auto-focus.prevent
@@ -45,7 +45,7 @@
           />
           <component
             :is="INPUTS[format]"
-            class="w-full text-center text-white focus:ring-1 focus:ring-[#0d99ff] focus:outline-none"
+            class="w-full bg-brown-700 px-2 text-center text-white focus:ring-1 focus:ring-brown-400 focus:outline-none"
           />
         </div>
       </ColorPickerRoot>
