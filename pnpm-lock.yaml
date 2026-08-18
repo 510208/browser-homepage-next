@@ -17,6 +17,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.3.1
         version: 4.3.1(vite@8.0.16(@types/node@24.13.2)(jiti@2.7.0))
+      '@vuelor/picker':
+        specifier: ^1.2.0
+        version: 1.2.0(reka-ui@2.9.10(vue@3.5.38(typescript@6.0.3)))(vue@3.5.38(typescript@6.0.3))
       '@vueuse/core':
         specifier: ^14.3.0
         version: 14.3.0(vue@3.5.38(typescript@6.0.3))
@@ -696,6 +699,12 @@ packages:
         optional: true
       vue:
         optional: true
+
+  '@vuelor/picker@1.2.0':
+    resolution: {integrity: sha512-1MjqEQgwV0qIGfzuuh+3RsjPxh52R1uYj9A9uEyoydoh/zv0Ki16wYf6CEbIhT2MUv7HsDGY4zgCuxNKPVLHoA==}
+    peerDependencies:
+      reka-ui: ^2.5.1
+      vue: ^3.2.0
 
   '@vueuse/core@14.3.0':
     resolution: {integrity: sha512-aHfz47g0ZhMtTVHmIzMVpJy8ePhhOy68GY5bv110+5DVtZ+W7BsOx+m61UNQqfrWyPztIHIanWa3E2tib3NFIw==}
@@ -1924,6 +1933,12 @@ snapshots:
   '@vue/tsconfig@0.9.1(typescript@6.0.3)(vue@3.5.38(typescript@6.0.3))':
     optionalDependencies:
       typescript: 6.0.3
+      vue: 3.5.38(typescript@6.0.3)
+
+  '@vuelor/picker@1.2.0(reka-ui@2.9.10(vue@3.5.38(typescript@6.0.3)))(vue@3.5.38(typescript@6.0.3))':
+    dependencies:
+      reka-ui: 2.9.10(vue@3.5.38(typescript@6.0.3))
+      tailwind-merge: 3.6.0
       vue: 3.5.38(typescript@6.0.3)
 
   '@vueuse/core@14.3.0(vue@3.5.38(typescript@6.0.3))':

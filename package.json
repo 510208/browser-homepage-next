@@ -9,12 +9,13 @@
     "preview": "vite preview",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
-    "cn": "pnpm dlx shadcn@latest"
+    "cn": "pnpm dlx shadcn-vue@latest"
   },
   "dependencies": {
     "@kreisler/js-google-translate-free": "^5.0.0",
     "@lucide/vue": "^1.21.0",
     "@tailwindcss/vite": "^4.3.1",
+    "@vuelor/picker": "^1.2.0",
     "@vueuse/core": "^14.3.0",
     "animejs": "^4.5.0",
     "class-variance-authority": "^0.7.1",
