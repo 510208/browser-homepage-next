@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
-import { useForwardPropsEmits } from 'reka-ui'
+import { ref, computed } from "vue";
+import { useForwardPropsEmits } from "reka-ui";
 import {
   ColorPickerRoot,
   ColorPickerCanvas,
@@ -12,37 +12,34 @@ import {
   ColorPickerInputRGB,
   ColorPickerInputHSB,
   type ColorPickerRootProps,
-  type ColorPickerRootEmits
-} from '@vuelor/picker'
+  type ColorPickerRootEmits,
+} from "@vuelor/picker";
 
-import ColorPickerSelect from '@/components/color-picker/ColorPickerSelect.vue'
+import ColorPickerSelect from "./ColorPickerSelect.vue";
 
 const INPUTS = {
   Hex: ColorPickerInputHex,
   RGB: ColorPickerInputRGB,
   HSL: ColorPickerInputHSL,
-  HSB: ColorPickerInputHSB
-}
+  HSB: ColorPickerInputHSB,
+};
 
-type ColorPickerProps = Omit<ColorPickerRootProps, 'styling' | 'ui'>
+type ColorPickerProps = Omit<ColorPickerRootProps, "styling" | "ui">;
 
-const props = defineProps<ColorPickerProps>()
-const emits = defineEmits<ColorPickerRootEmits>()
+const props = defineProps<ColorPickerProps>();
+const emits = defineEmits<ColorPickerRootEmits>();
 
-const forwarded = useForwardPropsEmits(props, emits)
+const forwarded = useForwardPropsEmits(props, emits);
 
-const format = ref<'Hex' | 'RGB' | 'HSL' | 'HSB'>('Hex')
-const formatOptions = ['Hex', 'RGB', 'HSL', 'HSB']
-const canvasType = computed<'HSL' | 'HSV'>(() => {
-  return format.value === 'HSL' ? 'HSL' : 'HSV'
-})
+const format = ref<"Hex" | "RGB" | "HSL" | "HSB">("Hex");
+const formatOptions = ["Hex", "RGB", "HSL", "HSB"];
+const canvasType = computed<"HSL" | "HSV">(() => {
+  return format.value === "HSL" ? "HSL" : "HSV";
+});
 </script>
 
 <template>
-  <ColorPickerRoot
-    :ui="{ input: { label: 'hidden' } }"
-    v-bind="forwarded"
-  >
+  <ColorPickerRoot :ui="{ input: { label: 'hidden' } }" v-bind="forwarded">
     <ColorPickerCanvas :type="canvasType" />
     <div class="flex items-center gap-3">
       <ColorPickerEyeDropper type="button" aria-label="Pick color from screen">
@@ -55,7 +52,7 @@ const canvasType = computed<'HSL' | 'HSV'>(() => {
           />
         </svg>
       </ColorPickerEyeDropper>
-      <div class="flex flex-col flex-1 gap-2">
+      <div class="flex flex-1 flex-col gap-2">
         <ColorPickerSliderHue />
         <ColorPickerSliderAlpha />
       </div>
