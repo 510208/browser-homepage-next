@@ -3,7 +3,7 @@
     <!-- 若有傳入 dialogContent，則渲染 Dialog 結構 -->
     <Dialog>
       <DialogTrigger as-child>
-        <div class="flex h-12 w-12 items-center justify-center">
+        <div class="flex h-12 w-12 items-center justify-center focus-within:outline-0">
           <Tooltip>
             <TooltipTrigger as-child>
               <slot />
