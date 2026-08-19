@@ -6,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import { toast } from "vue-sonner";
 
 const props = defineProps<{
@@ -42,68 +43,71 @@ const handleCopy = () => {
 
 <template>
   <div
-    class="relative flex w-1/2 flex-1 flex-col justify-between rounded-l-none rounded-r-2xl bg-[#4A2D1F] p-4 text-[#EAD0C3]"
+    class="relative flex w-1/2 flex-1 flex-col justify-between rounded-l-none rounded-r-2xl bg-brown-800 p-4 text-brown-100"
   >
     <!-- 頂部：目標語言選單與關閉按鈕 -->
     <header class="flex h-7 w-full items-center justify-between">
       <DropdownMenu>
         <DropdownMenuTrigger
-          class="flex items-center gap-1 rounded-md px-1.5 py-1 text-sm font-medium text-[#C29B88] transition-colors hover:bg-[#5C3A29] hover:text-[#EAD0C3]"
+          class="flex items-center gap-1 rounded-md px-1.5 py-1 text-sm font-medium text-brown-500 transition-colors hover:bg-brown-700 hover:text-brown-100"
         >
           <span>{{ languages.find((l) => l.value === targetLang)?.label || targetLang }}</span>
           <ChevronDown class="size-4 opacity-70" />
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="start" class="border-[#5C3A29] bg-[#382014] text-[#EAD0C3]">
+        <DropdownMenuContent align="start" class="border-brown-700 bg-brown-800 text-brown-100">
           <DropdownMenuItem
             v-for="lang in languages"
             :key="lang.value"
-            class="flex items-center justify-between hover:bg-[#4A2D1F] hover:text-[#EAD0C3]"
+            class="flex items-center justify-between hover:bg-brown-700 hover:text-brown-100"
             @click="handleSelectLanguage(lang.value)"
           >
             <span>{{ lang.label }}</span>
-            <Check v-if="targetLang === lang.value" class="size-4 text-[#EAD0C3]" />
+            <Check v-if="targetLang === lang.value" class="size-4 text-brown-100" />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <button
+      <Button
         type="button"
-        class="flex h-6 w-6 items-center justify-center rounded-full text-[#C29B88] transition-colors hover:bg-[#5C3A29] hover:text-[#EAD0C3]"
+        variant="ghost"
+        class="flex h-6 w-6 items-center justify-center rounded-full text-brown-400 transition-colors hover:bg-brown-700 hover:text-brown-100"
         @click="emit('clear')"
       >
-        <X class="size-4" />
-      </button>
+        <X class="mr-8 size-4" />
+      </Button>
     </header>
 
     <!-- 中間：翻譯結果與載入狀態 -->
     <main class="my-3 flex-1 overflow-y-auto">
-      <div v-if="props.isLoading" class="flex items-center gap-2 text-[#C29B88]">
+      <div v-if="props.isLoading" class="flex items-center gap-2 text-brown-400">
         <Loader2 class="size-4 animate-spin" />
         <span>翻譯中...</span>
       </div>
-      <p v-else class="text-lg leading-relaxed font-normal whitespace-pre-wrap text-[#EAD0C3]">
+      <p v-else class="text-lg leading-relaxed font-normal whitespace-pre-wrap text-brown-100">
         {{ props.translatedText }}
       </p>
     </main>
 
     <!-- 底部右側：功能按鈕膠囊區 -->
     <footer class="flex justify-end">
-      <div class="flex items-center gap-1 rounded-full bg-[#5C3A29] p-1.5 shadow-sm">
-        <button
+      <div class="flex items-center gap-1 rounded-full bg-brown-700 p-1.5 shadow-sm">
+        <Button
           type="button"
-          class="flex h-7 w-7 items-center justify-center rounded-full text-[#EAD0C3] transition-colors hover:bg-[#6E4632]"
+          class="flex h-7 w-7 items-center justify-center rounded-full"
           @click="handleCopy"
+          variant="ghost"
         >
           <Copy class="size-4" />
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
-          class="flex h-7 w-7 items-center justify-center rounded-full text-[#EAD0C3] transition-colors hover:bg-[#6E4632]"
+          class="flex h-7 w-7 items-center justify-center rounded-full"
+          variant="ghost"
           @click="emit('swap')"
         >
           <Repeat class="size-4" />
-        </button>
+        </Button>
       </div>
     </footer>
   </div>
