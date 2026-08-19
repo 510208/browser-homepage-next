@@ -3,6 +3,7 @@ import { defineConfig, type PluginOption } from "vite";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
 import { visualizer } from "rollup-plugin-visualizer";
+import vueDevTools from "vite-plugin-vue-devtools";
 
 import { fileURLToPath, URL } from "node:url";
 
@@ -18,6 +19,7 @@ export default defineConfig(({ mode }) => ({
         gzipSize: true, // 顯示 gzip 後的大小，更貼近實際網路傳輸
         brotliSize: true,
       }) as PluginOption),
+    vueDevTools(),
   ],
 
   resolve: {
