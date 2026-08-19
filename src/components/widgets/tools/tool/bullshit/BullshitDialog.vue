@@ -3,36 +3,42 @@
     class="flex w-full max-w-2xl flex-col flex-nowrap items-stretch gap-0 overflow-hidden rounded-2xl border border-brown-800 bg-brown-900"
   >
     <!-- 設定區塊 -->
-    <div class="grid grid-cols-2 gap-1 p-2">
-      <BullshitSettingFrame name="topic" title="主題" v-model="settings.topic" class="col-span-2" />
-      <BullshitSettingFrame
-        name="word-count"
-        title="字數"
-        :model-value="String(settings.totalTextCount ?? '')"
-        @update:model-value="settings.totalTextCount = $event ? Number($event) : undefined"
-      />
-      <BullshitSettingFrame
-        name="paragraphs"
-        title="段落數"
-        :model-value="String(settings.paragraphs ?? '')"
-        @update:model-value="settings.paragraphs = $event ? Number($event) : undefined"
-      />
-    </div>
-
-    <!-- 產生按鈕 -->
-    <div class="flex justify-end p-4 pt-0">
-      <Button
-        class="flex justify-center gap-1"
-        variant="default"
-        @click="generateBullshit(settings)"
-      >
-        <Pilcrow class="h-4 w-4" />
-        產生
-      </Button>
+    <div class="flex flex-col gap-2 bg-brown-800">
+      <div class="grid grid-cols-2 gap-1 p-2">
+        <BullshitSettingFrame
+          name="topic"
+          title="主題"
+          v-model="settings.topic"
+          class="col-span-2"
+        />
+        <BullshitSettingFrame
+          name="word-count"
+          title="字數"
+          :model-value="String(settings.totalTextCount ?? '')"
+          @update:model-value="settings.totalTextCount = $event ? Number($event) : undefined"
+        />
+        <BullshitSettingFrame
+          name="paragraphs"
+          title="段落數"
+          :model-value="String(settings.paragraphs ?? '')"
+          @update:model-value="settings.paragraphs = $event ? Number($event) : undefined"
+        />
+      </div>
+      <!-- 產生按鈕 -->
+      <div class="flex justify-end p-4 pt-0">
+        <Button
+          class="flex justify-center gap-1"
+          variant="default"
+          @click="handleGenerateBullshit(settings)"
+        >
+          <Pilcrow class="h-4 w-4" />
+          產生
+        </Button>
+      </div>
     </div>
 
     <!-- 產生結果 -->
-    <div class="flex flex-1 flex-col gap-1 p-2">
+    <div class="flex flex-1 flex-col gap-1 p-4">
       <Label class="text-xs font-medium tracking-widest text-brown-400" for="result">結果</Label>
       <Textarea v-model="result" id="result" readonly class="h-full w-full resize-none" />
     </div>
@@ -51,8 +57,14 @@ import { type GenerateOptions, generateBullshit } from "@/lib/bullshit/bullshitG
 
 const settings = ref({
   topic: "義大利麵",
-  totalTextCount: 300,
+  totalTextCount: 200,
   paragraphs: 1,
 } as GenerateOptions);
 const result = ref("");
+
+async function handleGenerateBullshit(options: GenerateOptions) {
+  const response = await generateBullshit(options);
+  // 將各個段落合併成一個字串，並以兩個換行符號分隔
+  result.value = response.join("\n\n");
+}
 </script>
