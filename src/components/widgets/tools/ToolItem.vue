@@ -17,7 +17,16 @@
         </div>
       </DialogTrigger>
 
-      <DialogContent as-child class="flex gap-0 border-none px-0 py-0" @open-auto-focus.prevent>
+      <DialogContent
+        class="flex gap-0 border-none px-0 py-0"
+        @open-auto-focus.prevent
+        aria-describedby="undefined"
+      >
+        <!-- 隱藏的DialogTitle -->
+        <VisuallyHidden asChild>
+          <DialogTitle>{{ props.name }}</DialogTitle>
+        </VisuallyHidden>
+
         <component :is="props.dialogContent" />
       </DialogContent>
     </Dialog>
@@ -27,7 +36,8 @@
 <script setup lang="ts">
 import type { Component } from "vue";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "reka-ui";
 
 const props = defineProps<{
   name: string;

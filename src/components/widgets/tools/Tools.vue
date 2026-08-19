@@ -17,11 +17,12 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils.ts";
 import ToolItem from "./ToolItem.vue";
-import { Languages, Palette } from "@lucide/vue";
+import { Languages, Palette, Pilcrow } from "@lucide/vue";
 import { defineAsyncComponent } from "vue";
 
 const TranslateDialog = defineAsyncComponent(() => import("./tool/translate/TranslateDialog.vue"));
 const ColorDialog = defineAsyncComponent(() => import("./tool/color/ColorDialog.vue"));
+const BullshitDialog = defineAsyncComponent(() => import("./tool/bullshit/BullshitDialog.vue"));
 
 const props = defineProps<{
   style?: Record<string, string>;
@@ -30,5 +31,6 @@ const props = defineProps<{
 const tools = [
   { name: "翻譯", icon: Languages, dialogContent: TranslateDialog },
   { name: "色碼轉換器", icon: Palette, dialogContent: ColorDialog },
+  { name: "廢話產生器", icon: Pilcrow, dialogContent: BullshitDialog },
 ];
 </script>
