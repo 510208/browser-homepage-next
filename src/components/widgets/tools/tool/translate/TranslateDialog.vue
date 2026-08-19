@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex w-full max-w-2xl flex-nowrap items-stretch gap-0 overflow-hidden rounded-2xl border border-[#4A2D1F]"
+    class="flex w-full max-w-2xl flex-nowrap items-stretch gap-0 overflow-hidden rounded-2xl border border-brown-800 bg-brown-900"
   >
     <TranslateSource v-model:source-text="sourceText" @clear="handleClear" />
     <TranslateResponse
