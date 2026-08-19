@@ -10,7 +10,7 @@ export interface BullshitData {
 export interface GenerateOptions {
   topic: string; // 指定主題
   paragraphs?: number; // 指定段落數量
-  minLenPerParagraph?: number; // 每段最低字數
+  totalTextCount?: number; // 期望的總字數 (預設 300)
 }
 
 // 私有變數：用於單例快取載入的字典資料
@@ -123,17 +123,22 @@ function generateParagraph(data: BullshitData, topic: string, minLen: number): s
  * @param textCount 每段目標最低字數 (預設 300)
  * @param options 擴充選項（包含主題名稱）
  */
-export async function generateBullshit(
-  paragraphs: number = 1,
-  textCount: number = 300,
-  options: Partial<GenerateOptions> = {},
-): Promise<string[]> {
+export async function generateBullshit(options: Partial<GenerateOptions> = {}): Promise<string[]> {
   const data = await loadData();
   const topic = options.topic || "這件事情";
+  const paragraphCount = Math.max(1, options.paragraphs || 1);
+  const totalTextCount = options.totalTextCount || 300;
+
+  /* 計算每段平均基礎字數與剩餘字數 */
+  const baseCountPerParagraph = Math.floor(totalTextCount / paragraphCount);
+  let remainder = totalTextCount % paragraphCount;
+
   const paragraphList: string[] = [];
 
-  for (let i = 0; i < paragraphs; i++) {
-    const paragraphText = generateParagraph(data, topic, textCount);
+  for (let i = 0; i < paragraphCount; i++) {
+    /* 將整除剩餘的字數平均分配給前幾個段落，確保總計達到需求 */
+    const targetMinLen = baseCountPerParagraph + (i < remainder ? 1 : 0);
+    const paragraphText = generateParagraph(data, topic, targetMinLen);
     paragraphList.push(paragraphText);
   }
 
