@@ -9,15 +9,31 @@
       >
         <component :is="tool.icon" class="h-6 w-6 text-brown-400" />
       </ToolItem>
+
+      <div class="flex h-12 w-12 items-center justify-center">
+        <Tooltip>
+          <TooltipTrigger as-child class="cursor-pointer">
+            <a href="https://it-tools.tech">
+              <Toolbox class="h-6 w-6 text-brown-400" />
+            </a>
+          </TooltipTrigger>
+          <TooltipContent
+            side="right"
+            class="flex max-w-xs items-center justify-end gap-0.5 truncate"
+          >
+            <p>IT Tools</p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
     </TooltipProvider>
   </div>
 </template>
 
 <script setup lang="ts">
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils.ts";
 import ToolItem from "./ToolItem.vue";
-import { Languages, Palette, Pilcrow } from "@lucide/vue";
+import { Languages, Palette, Pilcrow, Toolbox } from "@lucide/vue";
 import { defineAsyncComponent } from "vue";
 
 const TranslateDialog = defineAsyncComponent(() => import("./tool/translate/TranslateDialog.vue"));
