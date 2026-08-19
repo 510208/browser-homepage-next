@@ -2,3 +2,4 @@ allowBuilds:
   maplibre-gl: true
   opencc: true
   vue-demi: true
+minimumReleaseAge: 0
