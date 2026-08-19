@@ -4,7 +4,7 @@
     <div class="flex gap-1">
       <Input
         v-model="localValue"
-        class="w-full flex-1 border-[#5C3A29] bg-[#382014] text-[#EAD0C3] focus-visible:ring-[#0d99ff]"
+        class="w-full flex-1 border-brown-800"
         @blur="handleCommit"
         @keyup.enter="handleCommit"
       />

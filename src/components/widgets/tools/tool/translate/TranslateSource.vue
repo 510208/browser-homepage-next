@@ -53,13 +53,13 @@ const handleCopy = () => {
   >
     <!-- 頂部：語言標籤與清除按鈕 -->
     <InputGroupAddon align="block-start" class="flex h-7 w-full items-center justify-between p-0">
-      <InputGroupText class="text-sm font-medium text-[#8C6D5D]">
+      <InputGroupText class="text-sm font-medium text-brown-500">
         {{ props.languageLabel || "原文" }}
       </InputGroupText>
       <InputGroupButton
         variant="ghost"
         size="icon-xs"
-        class="h-6 w-6 rounded-full text-[#8C6D5D] hover:bg-[#4A2D1F] hover:text-[#EAD0C3]"
+        class="h-6 w-6 rounded-full text-brown-500 hover:bg-brown-700 hover:text-brown-100"
         @click="handleClear"
       >
         <X class="size-4" />
@@ -71,7 +71,7 @@ const handleCopy = () => {
     <InputGroupTextarea
       v-model="sourceText"
       placeholder="請輸入文字..."
-      class="my-3 min-h-[120px] resize-none border-none bg-transparent p-0 text-lg! font-normal text-[#EAD0C3] ring-0 focus-within:ring-0 hover:ring-0 focus-visible:ring-0"
+      class="my-3 min-h-[120px] resize-none border-none bg-transparent p-0 text-lg! font-normal text-brown-100 ring-0 focus-within:ring-0 hover:ring-0 focus-visible:ring-0"
     />
 
     <!-- 底部右側：功能按鈕膠囊區 -->
