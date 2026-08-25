@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:ext": "vite --mode extension",
     "build": "vue-tsc -b && vite build",
+    "build:ext": "vite build --mode extension",
+    "build:analyze": "vite build --mode analyze",
     "preview": "vite preview",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
@@ -36,6 +39,7 @@
     "vue3-simple-icons": "^16.10.0"
   },
   "devDependencies": {
+    "@crxjs/vite-plugin": "^2.7.1",
     "@types/node": "^26.3.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/tsconfig": "^0.9.1",
@@ -45,6 +49,7 @@
     "typescript": "^5.7.3",
     "vite": "^8.2.2",
     "vite-plugin-vue-devtools": "^8.2.1",
+    "vite-plugin-zip-pack": "^1.2.4",
     "vue-tsc": "^3.3.11"
   }
 }
