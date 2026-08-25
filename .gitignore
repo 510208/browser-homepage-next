@@ -27,3 +27,4 @@ release
 
 .env
 stats.html
+.PRIVATE-KEY
