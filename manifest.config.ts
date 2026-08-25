@@ -8,13 +8,13 @@ export default defineManifest({
     newtab: "index.html",
   },
   permissions: ["declarativeNetRequest", "geolocation"],
-  host_permissions: ["https://samhacker.xyz*", "https://api.samhacker.xyz/*"],
+  host_permissions: ["https://samhacker.xyz/*", "https://api.samhacker.xyz/*"],
   declarative_net_request: {
     rule_resources: [
       {
         id: "ruleset_cors",
         enabled: true,
-        path: "rules.json",
+        path: "extensions/rules.json",
       },
     ],
   },
@@ -22,5 +22,9 @@ export default defineManifest({
     gecko: {
       id: "newtab@samhacker.xyz",
     },
+  },
+  icons: {
+    "48": "extensions/icon48.png",
+    "128": "extensions/icon128.png",
   },
 });
