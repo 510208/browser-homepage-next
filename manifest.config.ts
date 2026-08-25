@@ -8,7 +8,7 @@ export default defineManifest({
     newtab: "index.html",
   },
   permissions: ["declarativeNetRequest", "geolocation"],
-  host_permissions: ["https://samhacker.xyz*"],
+  host_permissions: ["https://samhacker.xyz*", "https://api.samhacker.xyz/*"],
   declarative_net_request: {
     rule_resources: [
       {
@@ -17,5 +17,10 @@ export default defineManifest({
         path: "rules.json",
       },
     ],
+  },
+  browser_specific_settings: {
+    gecko: {
+      id: "newtab@samhacker.xyz",
+    },
   },
 });
