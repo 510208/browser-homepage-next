@@ -54,5 +54,14 @@ export default defineConfig(({ mode }) => ({
     cors: {
       origin: [/chrome-extension:\/\//],
     },
+
+    port: 5173,
+    strictPort: true,
+    hmr: {
+      protocol: "ws",
+      host: "localhost",
+      port: 5173,
+      clientPort: 5173, // 強制用戶端連接 5173 埠號，避免推算成 80 埠
+    },
   },
 }));
