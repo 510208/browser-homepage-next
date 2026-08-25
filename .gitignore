@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 dist
+release
 dist-ssr
 *.local
 
@@ -25,5 +26,3 @@ dist-ssr
 
 .env
 stats.html
-
-release/*
