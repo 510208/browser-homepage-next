@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:ext": "vite --mode extension",
     "build": "vue-tsc -b && vite build",
+    "build:ext": "vite build --mode extension",
+    "build:analyze": "vite build --mode analyze",
     "preview": "vite preview",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
