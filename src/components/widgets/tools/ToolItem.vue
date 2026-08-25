@@ -22,6 +22,7 @@
         @open-auto-focus.prevent
         aria-describedby="undefined"
       >
+        <DialogDescription class="sr-only"> 這是廢話產生器的彈窗描述 </DialogDescription>
         <!-- 隱藏的DialogTitle -->
         <VisuallyHidden asChild>
           <DialogTitle>{{ props.name }}</DialogTitle>
@@ -36,7 +37,13 @@
 <script setup lang="ts">
 import type { Component } from "vue";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { VisuallyHidden } from "reka-ui";
 
 const props = defineProps<{
