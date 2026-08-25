@@ -16,7 +16,14 @@ export default defineConfig(({ mode }) => {
   const isAnalyzeMode = mode === "analyze";
   const isExtensionMode = mode === "extension";
 
+  let defineConfigOptions = {};
+  if (isExtensionMode) {
+    defineConfigOptions = { __LIVE_RELOAD__: JSON.stringify(true) };
+  }
+
   return {
+    define: defineConfigOptions,
+
     plugins: [
       vue(),
       tailwindcss(),
