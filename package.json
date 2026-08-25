@@ -36,6 +36,7 @@
     "vue3-simple-icons": "^16.10.0"
   },
   "devDependencies": {
+    "@crxjs/vite-plugin": "^2.7.1",
     "@types/node": "^24.12.3",
     "@vitejs/plugin-vue": "^6.0.6",
     "@vue/tsconfig": "^0.9.1",

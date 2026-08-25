@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        { "header": "origin", "operation": "set", "value": "https://510208.github.io" },
+        { "header": "referer", "operation": "set", "value": "https://github.io" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "https://api.samhacker.xyz/*",
+      "resourceTypes": ["xmlhttprequest", "ping"]
+    }
+  }
+]

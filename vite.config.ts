@@ -7,6 +7,9 @@ import vueDevTools from "vite-plugin-vue-devtools";
 
 import { fileURLToPath, URL } from "node:url";
 
+import { crx } from "@crxjs/vite-plugin";
+import manifest from "./manifest.config.js";
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
   plugins: [
@@ -20,6 +23,7 @@ export default defineConfig(({ mode }) => ({
         brotliSize: true,
       }) as PluginOption),
     vueDevTools(),
+    crx({ manifest }),
   ],
 
   resolve: {
@@ -43,6 +47,12 @@ export default defineConfig(({ mode }) => ({
           }
         },
       },
+    },
+  },
+
+  server: {
+    cors: {
+      origin: [/chrome-extension:\/\//],
     },
   },
 }));
