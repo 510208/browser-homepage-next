@@ -51,6 +51,7 @@ import { ref } from "vue";
 import { Pilcrow } from "@lucide/vue";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import BullshitSettingFrame from "./BullshitSettingFrame.vue";
 
 import { type GenerateOptions, generateBullshit } from "@/lib/bullshit/bullshitGenerator.ts";
