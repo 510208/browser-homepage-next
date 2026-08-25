@@ -13,9 +13,9 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { WeatherTrigger } from "./index";
 import hotkeys from "hotkeys-js";
-import { ref, onMounted, onUnmounted, defineAsyncComponent } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
-const WeatherCard = defineAsyncComponent(() => import("./WeatherCard.vue"));
+import WeatherCard from "./WeatherCard.vue";
 const openWeatherCard = ref<boolean>(false);
 
 onMounted(() => {
