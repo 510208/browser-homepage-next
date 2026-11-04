@@ -1,4 +1,4 @@
-import { defineConfig, type PluginOption } from "vite";
+import { defineConfig, loadEnv, type PluginOption } from "vite";
 
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
@@ -11,9 +11,13 @@ import { crx } from "@crxjs/vite-plugin";
 import chromeManifest from "./manifest/chrome.config.ts";
 import geckoManifest from "./manifest/gecko.config.ts";
 import zip from "vite-plugin-zip-pack";
+import { firefoxUpdate } from "./plugins/firefox-update";
+import { readFileSync } from "node:fs";
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+
   const isAnalyzeMode = mode === "analyze";
   const isChromeMode = mode === "extension-chrome";
   const isGeckoMode = mode === "extension-gecko";
@@ -21,6 +25,10 @@ export default defineConfig(({ mode }) => {
 
   const manifest = isGeckoMode ? geckoManifest : chromeManifest;
   const browser = isGeckoMode ? "firefox" : "chrome";
+
+  const packageJson = JSON.parse(
+    readFileSync(new URL("./package.json", import.meta.url), "utf-8"),
+  ) as { version: string };
 
   let defineConfigOptions = {};
   if (isExtensionMode) {
@@ -43,6 +51,12 @@ export default defineConfig(({ mode }) => {
       vueDevTools(),
 
       isExtensionMode && crx({ manifest, browser }),
+      isGeckoMode &&
+        firefoxUpdate({
+          addonId: "newtab@samhacker.xyz",
+          version: packageJson.version,
+          updateLink: env.FIREFOX_UPDATE_LINK,
+        }),
       isExtensionMode &&
         zip({
           outDir: "release",

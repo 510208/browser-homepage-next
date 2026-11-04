@@ -1,9 +1,10 @@
 import { defineManifest } from "@crxjs/vite-plugin";
+import packageJson from "../package.json";
 
 export default defineManifest({
   manifest_version: 3,
   name: "SamHacker's Browser Homepage",
-  version: "1.0.0",
+  version: packageJson.version,
   description:
     "A browser homepage that displays the current time, date, and weather.",
 
@@ -29,6 +30,8 @@ export default defineManifest({
     gecko: {
       id: "newtab@samhacker.xyz",
       strict_min_version: "128.0",
+      update_url:
+        "https://github.com/510208/browser-homepage-next/releases/latest/download/updates.json",
       data_collection_permissions: {
         required: ["locationInfo"],
       },
