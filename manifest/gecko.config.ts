@@ -1,0 +1,42 @@
+import { defineManifest } from "@crxjs/vite-plugin";
+
+export default defineManifest({
+  manifest_version: 3,
+  name: "SamHacker's Browser Homepage",
+  version: "1.0.0",
+  description:
+    "A browser homepage that displays the current time, date, and weather.",
+
+  chrome_url_overrides: {
+    newtab: "index.html",
+  },
+
+  permissions: ["declarativeNetRequest", "geolocation"],
+
+  host_permissions: ["https://samhacker.xyz/*", "https://api.samhacker.xyz/*"],
+
+  declarative_net_request: {
+    rule_resources: [
+      {
+        id: "ruleset_cors",
+        enabled: true,
+        path: "extensions/rules.json",
+      },
+    ],
+  },
+
+  browser_specific_settings: {
+    gecko: {
+      id: "newtab@samhacker.xyz",
+      strict_min_version: "128.0",
+      data_collection_permissions: {
+        required: ["locationInfo"],
+      },
+    },
+  },
+
+  icons: {
+    "48": "extensions/icon48.png",
+    "128": "extensions/icon128.png",
+  },
+});

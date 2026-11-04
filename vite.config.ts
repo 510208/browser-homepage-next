@@ -8,13 +8,19 @@ import vueDevTools from "vite-plugin-vue-devtools";
 import { fileURLToPath, URL } from "node:url";
 
 import { crx } from "@crxjs/vite-plugin";
-import manifest from "./manifest.config.js";
+import chromeManifest from "./manifest/chrome.config.ts";
+import geckoManifest from "./manifest/gecko.config.ts";
 import zip from "vite-plugin-zip-pack";
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const isAnalyzeMode = mode === "analyze";
-  const isExtensionMode = mode === "extension";
+  const isChromeMode = mode === "extension-chrome";
+  const isGeckoMode = mode === "extension-gecko";
+  const isExtensionMode = isChromeMode || isGeckoMode;
+
+  const manifest = isGeckoMode ? geckoManifest : chromeManifest;
+  const browser = isGeckoMode ? "firefox" : "chrome";
 
   let defineConfigOptions = {};
   if (isExtensionMode) {
@@ -36,8 +42,12 @@ export default defineConfig(({ mode }) => {
         }) as PluginOption),
       vueDevTools(),
 
-      isExtensionMode && crx({ manifest }),
-      isExtensionMode && zip({ outDir: "release", outFileName: "release.zip" }),
+      isExtensionMode && crx({ manifest, browser }),
+      isExtensionMode &&
+        zip({
+          outDir: "release",
+          outFileName: `${browser}.zip`,
+        }),
     ],
 
     resolve: {
@@ -46,7 +56,9 @@ export default defineConfig(({ mode }) => {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
         "@assets": fileURLToPath(new URL("./src/assets", import.meta.url)),
-        "@components": fileURLToPath(new URL("./src/components", import.meta.url)),
+        "@components": fileURLToPath(
+          new URL("./src/components", import.meta.url),
+        ),
         "@styles": fileURLToPath(new URL("./src/styles", import.meta.url)),
       },
     },
@@ -56,7 +68,10 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks(id) {
             // 如果偵測到節點來自 opencc，就單獨打包成一個叫 opencc 的檔案
-            if (id.includes("node_modules/opencc-js") || id.includes("opencc")) {
+            if (
+              id.includes("node_modules/opencc-js") ||
+              id.includes("opencc")
+            ) {
               return "opencc-vendor";
             }
           },
@@ -66,11 +81,12 @@ export default defineConfig(({ mode }) => {
 
     server: {
       cors: {
-        origin: [/chrome-extension:\/\//],
+        origin: [/chrome-extension:\/\//, /moz-extension:\/\//],
       },
       ...(isExtensionMode && {
         port: 5173,
         strictPort: true,
+
         hmr: {
           protocol: "ws",
           host: "localhost",
