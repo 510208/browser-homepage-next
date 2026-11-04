@@ -28,3 +28,4 @@ release
 .env
 stats.html
 .PRIVATE-KEY
+.commitsage/translations.json
