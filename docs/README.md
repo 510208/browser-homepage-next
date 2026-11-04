@@ -4,6 +4,8 @@
 
 Browser Homepage Next是一個基於Vue、Vite及Tailwind CSS的純前端靜態網站，目標是提供一個自訂、與眾不同的瀏覽器首頁，並透過API與[本地伺服器](https://github.com/510208/browser-homepage-next/tree/main/server)進行數據交互。
 
+### [伺服器](https://github.com/510208/browser-homepage-next/releases/tag/1.0.0) | Chrome外掛 | Firefox外掛
+
 ## 功能
 
 - **自訂化瀏覽器首頁**：使用者可以自由選擇背景圖片、主題色彩、字體樣式，並可自訂快捷方式與小工具。
