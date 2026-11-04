@@ -29,7 +29,7 @@ export default defineManifest({
   browser_specific_settings: {
     gecko: {
       id: "newtab@samhacker.xyz",
-      strict_min_version: "128.0",
+      strict_min_version: "142.0",
       update_url:
         "https://github.com/510208/browser-homepage-next/releases/latest/download/updates.json",
       data_collection_permissions: {
