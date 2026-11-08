@@ -1,0 +1,76 @@
+name: Build and sign browser extensions
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: extension-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-sign:
+    name: Build extensions and sign Firefox package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build extensions
+        env:
+          FIREFOX_UPDATE_LINK: https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/firefox.xpi
+        run: pnpm build:ext
+
+      - name: Sign Firefox extension through AMO
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: |
+          test -n "$AMO_JWT_ISSUER"
+          test -n "$AMO_JWT_SECRET"
+
+          pnpm dlx web-ext@latest sign \
+            --source-dir dist \
+            --artifacts-dir release/signed \
+            --channel unlisted \
+            --api-key "$AMO_JWT_ISSUER" \
+            --api-secret "$AMO_JWT_SECRET"
+
+          xpi="$(find release/signed -maxdepth 1 -type f -name '*.xpi' -print -quit)"
+          test -n "$xpi"
+          cp "$xpi" release/firefox.xpi
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            release/chrome.zip \
+            release/firefox.zip \
+            release/firefox.xpi \
+            release/updates.json \
+            --title "${{ github.ref_name }}" \
+            --generate-notes
