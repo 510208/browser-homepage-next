@@ -1,9 +1,10 @@
 import { defineManifest } from "@crxjs/vite-plugin";
+import packageJson from "../package.json";
 
 export default defineManifest({
   manifest_version: 3,
   name: "SamHacker's Browser Homepage",
-  version: "1.0.0",
+  version: packageJson.version,
   description:
     "A browser homepage that displays the current time, date, and weather.",
 
