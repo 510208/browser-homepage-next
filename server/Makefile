@@ -10,7 +10,7 @@ BINARY := $(BUILD_DIR)/$(APP_NAME)
 INSTALL_DIR ?= $(HOME)/.local/bin
 
 NUITKA_FLAGS := \
-    --mode=onefile \
+    --mode=standalone \
     --enable-plugin=pyside6 \
     --output-dir=dist \
     --output-filename=$(APP_NAME) \
