@@ -9,10 +9,14 @@ import { transformWeatherData } from "./utils";
 import { toast } from "vue-sonner";
 
 const CWA_OPENAPI_ENDPOINT = "https://api.samhacker.xyz/cwa/v1/rest/datastore"; // 天氣API轉換端點URL
-const POSITION_TO_NAME_API = "https://api.nlsc.gov.tw/other/TownVillagePointQuery"; // 單點坐標回傳行政區
+const POSITION_TO_NAME_API =
+  "https://api.nlsc.gov.tw/other/TownVillagePointQuery"; // 單點坐標回傳行政區
 
 // 使用瀏覽器提供的API來取得當前位置
-function getLattitudeLongitude(): Promise<{ latitude: number; longitude: number }> {
+function getLattitudeLongitude(): Promise<{
+  latitude: number;
+  longitude: number;
+}> {
   // 使用瀏覽器的 Geolocation API 來取得使用者的經緯度
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
@@ -47,7 +51,9 @@ async function convertLocationToLocationName(
   const url = `${POSITION_TO_NAME_API}/${longitude}/${latitude}`;
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`Failed to fetch location ID: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Failed to fetch location ID: ${response.status} ${response.statusText}`,
+    );
   }
 
   const data = await response.text();
@@ -99,27 +105,25 @@ async function fetchWeather(): Promise<SimplifiedWeatherResponse> {
   const { latitude, longitude } = await getLattitudeLongitude();
 
   // 將經緯度轉換為行政區代碼
-  const { id: datasetId, response: locationResponse } = await convertLocationToLocationName(
-    latitude,
-    longitude,
-  );
+  const { id: datasetId, response: locationResponse } =
+    await convertLocationToLocationName(latitude, longitude);
 
   // 抓取天氣API
   const response = await fetch(
     `${CWA_OPENAPI_ENDPOINT}/F-D0047-093?locationId=${datasetId}&format=JSON&LocationName=${locationResponse.townName}`,
     {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
     },
   );
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch weather data: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Failed to fetch weather data: ${response.status} ${response.statusText}`,
+    );
   }
 
-  const weatherData: WeatherResponse = (await response.json()) as WeatherResponse;
+  const weatherData: WeatherResponse =
+    (await response.json()) as WeatherResponse;
   const simplifiedData = transformWeatherData(weatherData);
 
   console.log(
