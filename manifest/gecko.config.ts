@@ -12,19 +12,9 @@ export default defineManifest({
     newtab: "index.html",
   },
 
-  permissions: ["declarativeNetRequest", "geolocation"],
+  permissions: ["geolocation"],
 
   host_permissions: ["https://samhacker.xyz/*", "https://api.samhacker.xyz/*"],
-
-  declarative_net_request: {
-    rule_resources: [
-      {
-        id: "ruleset_cors",
-        enabled: true,
-        path: "extensions/rules.json",
-      },
-    ],
-  },
 
   browser_specific_settings: {
     gecko: {
