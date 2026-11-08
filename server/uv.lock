@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.13"
 
 [[package]]
@@ -34,13 +34,13 @@ dependencies = [
     { name = "py-cpuinfo" },
     { name = "pyinstaller" },
     { name = "pyside6" },
-    { name = "pywin32" },
+    { name = "pywin32", marker = "sys_platform == 'win32'" },
     { name = "setuptools" },
     { name = "textual" },
     { name = "textual-slider" },
-    { name = "winrt-windows-foundation" },
-    { name = "winrt-windows-media-control" },
-    { name = "winrt-windows-storage-streams" },
+    { name = "winrt-windows-foundation", marker = "sys_platform == 'win32'" },
+    { name = "winrt-windows-media-control", marker = "sys_platform == 'win32'" },
+    { name = "winrt-windows-storage-streams", marker = "sys_platform == 'win32'" },
 ]
 
 [package.metadata]
@@ -54,13 +54,13 @@ requires-dist = [
     { name = "py-cpuinfo", specifier = ">=9.0.0" },
     { name = "pyinstaller", specifier = ">=6.21.0" },
     { name = "pyside6", specifier = ">=6.11.1" },
-    { name = "pywin32", specifier = ">=312" },
+    { name = "pywin32", marker = "sys_platform == 'win32'", specifier = "==312" },
     { name = "setuptools", specifier = ">=82.0.1" },
     { name = "textual", specifier = ">=8.2.7" },
     { name = "textual-slider", specifier = ">=0.2.0" },
-    { name = "winrt-windows-foundation", specifier = ">=3.2.1" },
-    { name = "winrt-windows-media-control", specifier = ">=3.2.1" },
-    { name = "winrt-windows-storage-streams", specifier = ">=3.2.1" },
+    { name = "winrt-windows-foundation", marker = "sys_platform == 'win32'", specifier = ">=3.2.1" },
+    { name = "winrt-windows-media-control", marker = "sys_platform == 'win32'", specifier = ">=3.2.1" },
+    { name = "winrt-windows-storage-streams", marker = "sys_platform == 'win32'", specifier = ">=3.2.1" },
 ]
 
 [[package]]

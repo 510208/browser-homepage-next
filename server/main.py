@@ -1,23 +1,22 @@
+# pyright: basic
+
 import ctypes
 import logging
 import multiprocessing
 import os
+import signal
 import sys
 import threading
 import time
-from flask import Flask, jsonify, request
-from flask_cors import CORS
-import psutil
-import service
-import smtc
+
 import click
-from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QMenu
-from PySide6.QtGui import QIcon, QAction
-
-import signal
+from backend.api import create_api
+from config import FlaskLogMessage
+from flask import Flask
+from flask_cors import CORS
 from PySide6.QtCore import QTimer
-
-from config import MOCK_CONFIG, FlaskLogMessage
+from PySide6.QtGui import QAction, QIcon
+from PySide6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
 multiprocessing.freeze_support()
 
@@ -33,14 +32,14 @@ logging.basicConfig(
 )
 logging.getLogger("werkzeug").setLevel(logging.INFO)
 
-psutil.cpu_percent(interval=None, percpu=True)
+flask_app.register_blueprint(create_api(SERVER_START_TIME))
 
 
 def get_asset_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller"""
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS  # type: ignore
+        base_path = sys._MEIPASS  # type: ignore[reportAttributeAccessIssue]
     except Exception:
         base_path = os.path.abspath(".")
 
@@ -59,13 +58,14 @@ class ColoredTuiLogHandler(logging.Handler):
 class TuiAnsiFormatter(logging.Formatter):
     """自訂格式化工具，為不同的日誌層級加上 ANSI 顏色代碼"""
 
-    COLOR_PREFIX = {
-        logging.DEBUG: "\033[36m[DEBUG]\033[0m",
-        logging.INFO: "\033[32m[INFO ]\033[0m",
-        logging.WARNING: "\033[33m[WARN ]\033[0m",
-        logging.ERROR: "\033[31m[ERROR]\033[0m",
-        logging.CRITICAL: "\033[1;31m[CRIT ]\033[0m",
-    }
+    def __init__(self):
+        self.COLOR_PREFIX: dict[int, str] = {
+            logging.DEBUG: "\033[36m[DEBUG]\033[0m",
+            logging.INFO: "\033[32m[INFO ]\033[0m",
+            logging.WARNING: "\033[33m[WARN ]\033[0m",
+            logging.ERROR: "\033[31m[ERROR]\033[0m",
+            logging.CRITICAL: "\033[1;31m[CRIT ]\033[0m",
+        }
 
     def format(self, record):
         time_str = self.formatTime(record, "%H:%M:%S")
@@ -74,67 +74,6 @@ class TuiAnsiFormatter(logging.Formatter):
         if "GET" in message or "POST" in message:
             message = f"\033[35m{message}\033[0m"
         return f"{time_str} {prefix} {message}"
-
-
-@flask_app.route("/api/status", methods=["GET", "POST"])
-def get_hardware_status_fast():
-    request.get_json(force=True, silent=True)
-
-    if MOCK_CONFIG["enable_mock"]:
-        # 實時更新模擬數據中的運作時間
-        MOCK_CONFIG["system"]["uptime_seconds"] = int(time.time() - SERVER_START_TIME)
-
-        # 處理電池可能為 null 的狀況
-        response_data = dict(MOCK_CONFIG)
-        if MOCK_CONFIG["battery_is_null"]:
-            response_data["battery"] = None
-        else:
-            response_data["battery"] = MOCK_CONFIG["battery"]
-
-        # 移除內部控制用的非標準欄位再行回傳
-        response_data.pop("enable_mock", None)
-        response_data.pop("battery_is_null", None)
-        return jsonify(response_data), 200
-
-    # 呼叫 service.py 中各硬體獨立的真實數據採集邏輯
-    status = {
-        "system": service.get_system_info(SERVER_START_TIME),
-        "cpu": service.get_cpu_info(),
-        "memory": service.get_memory_info(),
-        "disk": service.get_disk_info(),
-        "network": service.get_network_info(),
-        "battery": service.get_battery_info(),
-    }
-
-    return jsonify(status), 200
-
-
-# region 控制本地音訊播放的API端點
-@flask_app.route("/api/media", methods=["GET"])
-def get_media_info():
-    media_info_json = smtc.get_media_info()
-    return media_info_json, 200
-
-
-@flask_app.route("/api/media/next", methods=["POST"])
-def play_next_track():
-    smtc.next_track()
-    return jsonify({"message": "Success to play next track"}), 200
-
-
-@flask_app.route("/api/media/previous", methods=["POST"])
-def play_previous_track():
-    smtc.previous_track()
-    return jsonify({"message": "Success to play previous track"}), 200
-
-
-@flask_app.route("/api/media/toggle", methods=["POST"])
-def toggle_play_pause():
-    smtc.toggle_play()
-    return jsonify({"message": "Success to toggle play/pause"}), 200
-
-
-# endregion
 
 
 def setup_unified_logging():
@@ -238,9 +177,9 @@ def main(is_dev_mode, is_silent_mode, port):
     # 輸出歡迎訊息
     print(
         r"""
- /$$$$$$$                                                                        /$$   /$$                                                                        
-| $$__  $$                                                                      | $$  | $$                                                                        
-| $$  \ $$ /$$$$$$   /$$$$$$  /$$  /$$  /$$ /$$$$$$$  /$$$$$$   /$$$$$$         | $$  | $$ /$$$$$$  /$$$$$$/$$$$   /$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$ 
+ /$$$$$$$                                                                        /$$   /$$
+| $$__  $$                                                                      | $$  | $$
+| $$  \ $$ /$$$$$$   /$$$$$$  /$$  /$$  /$$ /$$$$$$$  /$$$$$$   /$$$$$$         | $$  | $$ /$$$$$$  /$$$$$$/$$$$   /$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$
 | $$$$$$$/ /$$__  $$ /$$__  $$| $$ | $$ | $$ /$$_____/ /$$__  $$ /$$__  $$        | $$$$$$$$ /$$__  $$| $$_  $$_  $$ /$$__  $$ /$$__  $$ |____  $$ /$$__  $$ /$$__  $$
 | $$__  $$| $$  \__/| $$  \ $$| $$ | $$ | $$|  $$$$$$ | $$$$$$$$| $$  \__/        | $$__  $$| $$  \ $$| $$ \ $$ \ $$| $$$$$$$$| $$  \ $$  /$$$$$$$| $$  \ $$| $$$$$$$$
 | $$  \ $$| $$      | $$  | $$| $$ | $$ | $$ \____  $$| $$_____/| $$              | $$  | $$| $$  | $$| $$ | $$ | $$| $$_____/| $$  | $$ /$$__  $$| $$  \ $$| $$_____/
@@ -286,7 +225,7 @@ def main(is_dev_mode, is_silent_mode, port):
 if __name__ == "__main__":
     # 檢查標準輸出是否存在，避免在隱藏主控台時因 sys.stdout 為 None 導致崩潰
     if sys.stdout is not None:
-        sys.stdout.reconfigure(line_buffering=True)  # type: ignore
+        reconfigure = getattr(sys.stdout, "reconfigure", None)
 
     try:
         main()

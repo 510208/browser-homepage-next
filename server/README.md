@@ -16,10 +16,14 @@
 ```
 server/
 ├── config.py            # 全域組態設定、Flask 模擬數據快取 (MOCK_CONFIG) 及訊息模型定義
-├── service.py           # 真實硬體採集核心（包含各硬體獨立函數與主要實體網卡判定邏輯）
-├── main.py              # 程式主入口，負責 Flask API 路由、系統托盤、CLI 參數解析與日誌代理
+├── backend/
+│   ├── api/             # Flask API 端點
+│   ├── service/         # 裝置狀態、硬體資訊與媒體控制服務
+│   └── platform/        # 各平台的網路資訊與 Windows 媒體控制
+├── service.py           # 硬體服務的相容性匯出
+├── main.py              # 程式主入口、系統托盤、CLI 參數解析與日誌代理
 ├── tui_panels.py        # 基於 Textual 的 TUI 控制面板實作（包含下拉選單與數據同步寫回邏輯）
-├── smtc.py              # 系統媒體傳輸控制（System Media Transport Controls）整合模組
+├── smtc.py              # Windows 媒體控制的相容性匯出
 ├── styles.tcss          # TUI 面板的樣式表檔案
 ├── icon.png             # 系統工作列（Tray Icon）使用的圖示檔案
 ├── main.spec            # PyInstaller 打包組態設定檔
@@ -41,14 +45,18 @@ server/
 此專案的預編譯版本目前僅有Windows x64，請至[Releases](https://github.com/510208/browser-homepage-next/releases/latest)下載。如需自行編譯，請安裝uv套件管理器，並使用以下指令安裝相依性：
 
 ```bash
-$ uv install
+$ uv sync
 ```
 
-安裝相依性後，可直接在本地啟動Flask伺服器，並透過瀏覽器訪問 `http://localhost:5000` 來查看API回傳的JSON數據。若要啟動TUI控制面板，請在終端機中執行：
+安裝相依性後，可直接在本地啟動Flask伺服器，並透過瀏覽器訪問 `http://localhost:5000` 來查看API回傳的JSON數據。請在 `server` 目錄中執行：
 
 ```bash
 $ uv run main.py
 ```
+
+加入 `--dev` 可啟動 TUI 控制面板。Linux 執行主程式需要可用的 Qt 圖形環境與系統匣。
+
+`/api/status` 支援 Windows 和 Linux，回傳 CPU、記憶體、根目錄磁碟、網路與電池資訊。Linux Wi-Fi SSID 需要系統安裝 `iwgetid`；無法取得時名稱為 `Unknown/Error`。媒體控制目前僅支援 Windows，Linux 的 `/api/media` 端點回傳 HTTP 501。
 
 如需手動編譯可用的執行檔，請參考以下指令。相關設定可在 `main.spec` 中修改，並確保已安裝 [PyInstaller](https://pyinstaller.org/en/stable/)。
 
@@ -62,7 +70,7 @@ $ uv run pyinstaller .\main.spec
 
 ## 注意事項
 
-- 本專案僅支援Windows x64平台，其他平台的相容性未經測試。
+- 預編譯版本僅提供 Windows x64；Linux 可從原始碼執行，媒體控制尚未支援。
 - 此伺服器應且僅應在本地網路環境中使用，請勿將其暴露於網際網路，以避免潛在的安全風險。
 - 如有更新建議或問題，歡迎透過GitHub Issues提交，我們將盡快回應。
 
