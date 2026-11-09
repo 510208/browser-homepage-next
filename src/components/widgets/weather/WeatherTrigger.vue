@@ -1,19 +1,25 @@
 <template>
-  <div class="flex" id="sh-weather-trigger" @click="updateWeatherAndTimes">
+  <div
+    class="flex cursor-default"
+    id="sh-weather-trigger"
+    @click="updateWeatherAndTimes"
+  >
     <div class="flex gap-1">
       <img class="size-12" :src="weatherIcon" />
     </div>
     <div class="flex w-15 flex-col items-start justify-center gap-0">
-      <h1 class="text-2xl font-bold text-white">
+      <h1 class="text-2xl font-bold text-white text-nowrap">
         {{
-          getClosestValueFromMap(weatherStore.weatherData?.records[0]?.locations[0]?.temperature) ||
-          "N/A"
+          getClosestValueFromMap(
+            weatherStore.weatherData?.records[0]?.locations[0]?.temperature,
+          ) || "N/A"
         }}°C
       </h1>
       <p class="w-full text-base text-nowrap text-brown-200">
         {{
-          getClosestValueFromMap(weatherStore.weatherData?.records[0]?.locations[0]?.weather) ||
-          "N/A"
+          getClosestValueFromMap(
+            weatherStore.weatherData?.records[0]?.locations[0]?.weather,
+          ) || "N/A"
         }}
       </p>
     </div>
@@ -22,7 +28,11 @@
 
 <script setup lang="ts">
 import { useWeatherStore } from "@/stores/useWeatherStore";
-import { getWeatherIcon, getClosestWeatherCode, getClosestValueFromMap } from "@/lib/weather/utils";
+import {
+  getWeatherIcon,
+  getClosestWeatherCode,
+  getClosestValueFromMap,
+} from "@/lib/weather/utils";
 import type { SimplifiedLocation } from "@/types/weatherResponse";
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import { fetchWeather } from "@/lib/weather/fetchWeather";
@@ -66,13 +76,16 @@ onUnmounted(() => {
 
 const weatherIcon = computed(() => {
   const targetLocation = weatherStore.weatherData?.records[0]?.locations[0];
-  const time: "day" | "night" = currentHour.value >= 18 || currentHour.value < 6 ? "night" : "day";
+  const time: "day" | "night" =
+    currentHour.value >= 18 || currentHour.value < 6 ? "night" : "day";
 
   if (!targetLocation) {
     return getWeatherIcon("01", time);
   }
 
-  const currentCode = getClosestWeatherCode(targetLocation as SimplifiedLocation);
+  const currentCode = getClosestWeatherCode(
+    targetLocation as SimplifiedLocation,
+  );
   // console.log("[Weather] currentCode", currentCode);
 
   return getWeatherIcon(currentCode || "01", time);
