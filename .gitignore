@@ -29,3 +29,4 @@ release
 stats.html
 .PRIVATE-KEY
 .commitsage/translations.json
+.directory
