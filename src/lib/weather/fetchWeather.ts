@@ -1,4 +1,5 @@
 import { XMLParser } from "fast-xml-parser";
+import { fetch } from "@/lib/fetch";
 import type {
   TownVillagePointResponse,
   WeatherResponse,

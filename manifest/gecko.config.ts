@@ -1,5 +1,5 @@
 import { defineManifest } from "@crxjs/vite-plugin";
-import packageJson from "../package.json";
+import packageJson from "../package.json" with { type: "json" };
 
 export default defineManifest({
   manifest_version: 3,
@@ -14,7 +14,13 @@ export default defineManifest({
 
   permissions: ["geolocation"],
 
-  host_permissions: ["https://samhacker.xyz/*", "https://api.samhacker.xyz/*"],
+  host_permissions: [
+    "https://samhacker.xyz/*",
+    "https://api.samhacker.xyz/*",
+    "https://api.github.com/*",
+    "https://api.nlsc.gov.tw/*",
+    "http://127.0.0.1:5000/*",
+  ],
 
   browser_specific_settings: {
     gecko: {
@@ -31,5 +37,9 @@ export default defineManifest({
   icons: {
     "48": "extensions/icon48.png",
     "128": "extensions/icon128.png",
+  },
+
+  background: {
+    scripts: ["src/background/index.ts"],
   },
 });

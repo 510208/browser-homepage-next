@@ -3,4 +3,6 @@ import * as fetchQuoteModule from "@/lib/fetchQuote";
 import * as weatherModule from "@/lib/weather";
 import * as deviceInfoModule from "@/lib/device-info";
 
+export { fetch } from "@/lib/fetch";
+
 export { cnUtils, fetchQuoteModule, weatherModule, deviceInfoModule };

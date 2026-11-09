@@ -3,3 +3,6 @@ allowBuilds:
   opencc: true
   vue-demi: true
 minimumReleaseAge: 0
+permissions:
+  dotenv:
+    skills: true

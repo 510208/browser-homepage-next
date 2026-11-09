@@ -1,3 +1,5 @@
+import { fetch } from "@/lib/fetch";
+
 type YouTubeData = {
   id: string;
   statistics: {
@@ -15,7 +17,9 @@ async function fetchData() {
   const res = await fetch(apiUrl);
 
   if (!res.ok) {
-    console.error(`Failed to fetch YouTube data: ${res.status} ${res.statusText}`);
+    console.error(
+      `Failed to fetch YouTube data: ${res.status} ${res.statusText}`,
+    );
     return null;
   }
 

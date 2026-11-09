@@ -14,6 +14,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import CustomSearchPanel from "@/components/ui/SearchCommandPanel.vue";
+import { fetch } from "@/lib/fetch";
 
 // 狀態定義
 const searchQuery = ref("");

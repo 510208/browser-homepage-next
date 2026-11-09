@@ -1,3 +1,5 @@
+import { fetch } from "@/lib/fetch";
+
 type WakaTimeData = {
   total_seconds: number;
   text: string;
@@ -25,7 +27,9 @@ async function fetchData() {
   const res = await fetch(apiUrl);
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch WakaTime data: ${res.status} ${res.statusText}`);
+    throw new Error(
+      `Failed to fetch WakaTime data: ${res.status} ${res.statusText}`,
+    );
   }
   const data = (await res.json()).data as WakaTimeData;
   return data;
