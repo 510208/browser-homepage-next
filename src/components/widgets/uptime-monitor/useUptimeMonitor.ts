@@ -3,13 +3,17 @@ import { fetchUptimeKuma } from "@/lib/uptime-kuma/fetchUptimeKuma";
 import { buildGroups, summarizeGroups } from "@/lib/uptime-kuma/utils";
 
 export function useUptimeMonitor() {
-  const data = shallowRef<Awaited<ReturnType<typeof fetchUptimeKuma>> | null>(null);
+  const data = shallowRef<Awaited<ReturnType<typeof fetchUptimeKuma>> | null>(
+    null,
+  );
   const isLoading = ref(true);
   const isRefreshing = ref(false);
   const error = ref<string | null>(null);
   const updatedAt = ref<Date | null>(null);
   const groups = computed(() =>
-    data.value ? buildGroups(data.value.statusPage.publicGroupList, data.value.heartbeat) : [],
+    data.value
+      ? buildGroups(data.value.statusPage.publicGroupList, data.value.heartbeat)
+      : [],
   );
   const summary = computed(() => summarizeGroups(groups.value));
 
@@ -18,6 +22,8 @@ export function useUptimeMonitor() {
   let disposed = false;
 
   async function refresh() {
+    console.log("refreshing uptime monitor");
+
     if (disposed || isRefreshing.value) return;
     clearTimeout(timer);
     isRefreshing.value = true;
@@ -57,5 +63,13 @@ export function useUptimeMonitor() {
     controller?.abort();
   });
 
-  return { groups, summary, isLoading, isRefreshing, error, updatedAt, refresh };
+  return {
+    groups,
+    summary,
+    isLoading,
+    isRefreshing,
+    error,
+    updatedAt,
+    refresh,
+  };
 }

@@ -8,6 +8,7 @@
             alt="@510208"
           />
           <AvatarFallback>SH</AvatarFallback>
+          <AvatarBadge :class="ringColor" />
         </Avatar>
       </HoverCardTrigger>
 
@@ -23,7 +24,48 @@
 </template>
 
 <script setup lang="ts">
-import { Avatar, AvatarImage, AvatarFallback } from "@components/ui/avatar";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+  AvatarBadge,
+} from "@components/ui/avatar";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { UptimeMonitor } from "@/components/widgets/uptime-monitor";
+import { useUptimeMonitor } from "../uptime-monitor/useUptimeMonitor";
+import { computed, watch } from "vue";
+
+const { summary } = useUptimeMonitor();
+
+console.log("[Avatar] summary: ", summary.value);
+const ringColor = computed(() => {
+  const status = summary.value?.status;
+
+  if (["up"].includes(status ?? "")) {
+    return "bg-green-500";
+  }
+
+  if (["down", "unknown"].includes(status ?? "")) {
+    return "bg-red-500";
+  }
+
+  if (["maintenance"].includes(status ?? "")) {
+    return "bg-blue-500";
+  }
+
+  return "bg-yellow-500";
+});
+
+watch(
+  summary,
+  (value) => {
+    console.log("[Avatar] summary updated:", value);
+    console.log("[Avatar] ringColor:", ringColor.value);
+  },
+  { immediate: true },
+);
 </script>
