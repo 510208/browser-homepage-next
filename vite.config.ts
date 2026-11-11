@@ -11,7 +11,7 @@ import { crx } from "@crxjs/vite-plugin";
 import chromeManifest from "./manifest/chrome.config.ts";
 import geckoManifest from "./manifest/gecko.config.ts";
 import zip from "vite-plugin-zip-pack";
-import { firefoxUpdate } from "./plugins/firefox-update";
+import { firefoxUpdate } from "./plugins/firefox-update.ts";
 import { readFileSync } from "node:fs";
 
 // https://vite.dev/config/
